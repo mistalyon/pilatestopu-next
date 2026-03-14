@@ -9,10 +9,50 @@ export const metadata: Metadata = {
     template: '%s | PilatesTopu',
   },
   description: 'Pilates hakkında her şey! Türkiye\'deki en iyi pilates salonları, pilates dersleri (reformer, mat), egzersiz rehberleri ve ekipmanlar için kaynağınız.',
+  keywords: ['pilates', 'pilates salonları', 'reformer pilates', 'mat pilates', 'klinik pilates', 'pilates dersleri', 'türkiye pilates'],
+  authors: [{ name: 'PilatesTopu.com' }],
+  creator: 'PilatesTopu',
+  publisher: 'PilatesTopu',
   icons: {
     icon: 'https://pilatestopu.com/wp-content/uploads/2020/12/cropped-Grup-5-3-32x32.png',
   },
   metadataBase: new URL('https://pilatestopu-next.vercel.app'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'tr_TR',
+    url: 'https://pilatestopu-next.vercel.app',
+    siteName: 'PilatesTopu',
+    title: 'Türkiye\'nin Pilates Rehberi | PilatesTopu',
+    description: 'Türkiye\'nin en kapsamlı pilates rehberi. 81 ilde pilates salonları, reformer pilates, mat pilates ve daha fazlası.',
+    images: [
+      {
+        url: 'https://pilatestopu.com/wp-content/uploads/2025/04/en-yakin-pilates-salonu-783x1024.png',
+        width: 783,
+        height: 1024,
+        alt: 'PilatesTopu - Türkiye Pilates Rehberi',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Türkiye\'nin Pilates Rehberi | PilatesTopu',
+    description: 'Türkiye\'nin en kapsamlı pilates rehberi. 81 ilde pilates salonları.',
+    images: ['https://pilatestopu.com/wp-content/uploads/2025/04/en-yakin-pilates-salonu-783x1024.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({
