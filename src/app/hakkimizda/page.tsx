@@ -1,72 +1,68 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import Link from "next/link";
+import { Target, Users, MapPin, Heart } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Hakkimizda - PilatesTopu | Turkiye'nin Pilates Rehberi",
-  description: "PilatesTopu.com hakkinda bilgi edinin. Turkiye'nin en kapsamli pilates rehberi olarak misyonumuz, vizyonumuz ve hikayemiz.",
+  title: "Hakkımızda | PilatesTopu - Türkiye'nin Pilates Rehberi",
+  description: "PilatesTopu, Türkiye genelinde pilates salonlarını, eğitmenlerini ve ekipmanlarını keşfetmenizi sağlayan ücretsiz bir rehber platformudur.",
+  alternates: { canonical: "https://pilatestopu-next.vercel.app/hakkimizda" },
 };
+
+const stats = [
+  { icon: MapPin, value: "81", label: "İl" },
+  { icon: Users, value: "500+", label: "Salon" },
+  { icon: Target, value: "9", label: "Pilates Türü" },
+  { icon: Heart, value: "7/24", label: "Destek" },
+];
 
 export default function HakkimizdaPage() {
   return (
-    <main className="min-h-screen">
-      <section className="bg-gradient-to-r from-purple-700 via-purple-600 to-pink-500 py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Hakkimizda</h1>
-          <p className="text-xl text-purple-100">Turkiye&apos;nin en kapsamli pilates platformu</p>
+    <>
+      <section className="bg-gradient-to-b from-[#F2DFF4] to-white py-12">
+        <div className="container mx-auto px-4 max-w-4xl text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Hakkımızda</h1>
+          <p className="text-gray-600 text-lg">Türkiye’nin en kapsamlı pilates rehberi</p>
         </div>
       </section>
 
-      <section className="max-w-4xl mx-auto px-4 py-16">
-        <div className="prose prose-lg max-w-none">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">PilatesTopu.com Nedir?</h2>
-          <p className="text-gray-700 mb-6 leading-relaxed">
-            PilatesTopu.com, Turkiye genelinde pilates ile ilgilenen herkese yardimci olmak amaciyla kurulmus kapsamli bir platformdur. 81 ilde pilates salonlari, egitmenler, fizyoterapistler ve studyolar hakkinda detayli bilgiler sunuyoruz.
-          </p>
-          <p className="text-gray-700 mb-6 leading-relaxed">
-            Amacimiz, pilates yapmak isteyen kisilerin dogru studyoyu, egitmeni veya fizyoterapisti kolayca bulmalarini saglamaktir. Ayni zamanda pilates hakkinda egitici icerikler ureterek, insanlarin saglkli bir yasam tarzi benimsemelerine katki saglamayi hedefliyoruz.
+      <section className="container mx-auto px-4 max-w-4xl py-12">
+        <div className="grid sm:grid-cols-4 gap-6 mb-12">
+          {stats.map((s) => (
+            <div key={s.label} className="bg-white rounded-2xl shadow-sm border p-6 text-center">
+              <s.icon className="w-8 h-8 text-[#730EC3] mx-auto mb-2" />
+              <p className="text-2xl font-bold text-gray-900">{s.value}</p>
+              <p className="text-sm text-gray-500">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="prose max-w-none">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Misyonumuz</h2>
+          <p className="text-gray-600 leading-relaxed mb-6">
+            PilatesTopu, Türkiye genelinde pilates ile ilgilenen herkese yardımcı olmayı amaçlayan ücretsiz bir dijital platformdur.
+            81 ilde pilates salonlarını, eğitmenlerini, ders türlerini ve ekipmanları keşfetmenize olanak sağlıyoruz.
           </p>
 
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">Misyonumuz</h2>
-          <p className="text-gray-700 mb-6 leading-relaxed">
-            Turkiye&apos;deki pilates ekosistemini dijitalleristirerek, pilates severlerin en dogru bilgiye ve en kaliteli hizmete erisimini kolaylastirmak. Pilates salonlari ve egitmenlere de dijital ortamda gorunurluk sagleyarak sektore katki sunmak.
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Ne Yapıyoruz?</h2>
+          <p className="text-gray-600 leading-relaxed mb-6">
+            Reformer pilates, mat pilates, klinik pilates, hamile pilatesi gibi farklı pilates türlerinde hizmet veren salonları
+            bir araya getirerek, kullanıcıların en uygun salonu kolayca bulmalarını sağlıyoruz. Ayrıca blogumuzda
+            pilates hakkında faydalı rehber yazıları ve egzersiz önerileri paylaşıyoruz.
           </p>
 
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 mt-12">Ne Sunuyoruz?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            <div className="bg-purple-50 p-6 rounded-xl">
-              <h3 className="text-xl font-bold text-purple-700 mb-3">Salon Rehberi</h3>
-              <p className="text-gray-600">Turkiye genelinde pilates salonlari, studyolar ve merkezler hakkinda detayli bilgiler ve kullanici degerlendirmeleri.</p>
-            </div>
-            <div className="bg-pink-50 p-6 rounded-xl">
-              <h3 className="text-xl font-bold text-pink-700 mb-3">Egitmen Dizini</h3>
-              <p className="text-gray-600">Uzman pilates egitmenleri ve fizyoterapistleri kesferin, uzmanlik alanlarini ve deneyimlerini inceleyin.</p>
-            </div>
-            <div className="bg-teal-50 p-6 rounded-xl">
-              <h3 className="text-xl font-bold text-teal-700 mb-3">Blog & Rehberler</h3>
-              <p className="text-gray-600">Pilates hakkinda egitici yazilar, egzersiz rehberleri, beslenme onerileri ve uzman gorusleri.</p>
-            </div>
-            <div className="bg-purple-50 p-6 rounded-xl">
-              <h3 className="text-xl font-bold text-purple-700 mb-3">Sehir Rehberleri</h3>
-              <p className="text-gray-600">81 ilde pilates imkanlari hakkinda detayli sehir rehberleri ve bolgesel oneriler.</p>
-            </div>
-          </div>
-
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Iletisim</h2>
-          <p className="text-gray-700 mb-4 leading-relaxed">
-            Bize ulasmak icin asagidaki kanallari kullanabilirsiniz:
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">İşletme Sahipleri İçin</h2>
+          <p className="text-gray-600 leading-relaxed mb-6">
+            Pilates salonunuzu platformumuza ücretsiz olarak ekleyebilirsiniz. Binlerce potansiyel müşteriye ulaşmak
+            ve online görünürlüğünüzü artırmak için hemen başvurun.
           </p>
-          <ul className="space-y-3 text-gray-700">
-            <li className="flex items-center gap-3">
-              <span>&#9993;</span> <span>info@pilatestopu.com</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span>&#9742;</span> <span>+90 544 673 22 02</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span>&#128205;</span> <span>Balat, Fatih / Istanbul</span>
-            </li>
-          </ul>
+          <Link
+            href="/is-ortakligi"
+            className="inline-block bg-[#730EC3] hover:bg-[#5a0b9a] text-white font-medium py-3 px-6 rounded-xl transition-colors no-underline"
+          >
+            İş Ortaklığı Başvurusu &rarr;
+          </Link>
         </div>
       </section>
-    </main>
+    </>
   );
 }
