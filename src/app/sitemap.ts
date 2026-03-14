@@ -1,54 +1,59 @@
-import { MetadataRoute } from "next";
+import { MetadataRoute } from 'next';
+import { supabase } from '@/lib/supabase';
 
-const BASE_URL = "https://pilatestopu-next.vercel.app";
+const BASE_URL = 'https://pilatestopu-next.vercel.app';
 
-const cities = [
-  "istanbul", "ankara", "izmir", "antalya", "bursa", "eskisehir",
-  "konya", "gaziantep", "adana", "mersin", "kayseri", "trabzon",
-  "samsun", "denizli", "diyarbakir", "mugla", "sakarya", "balikesir",
-  "malatya", "manisa", "hatay", "kahramanmaras", "van", "mardin",
-  "aydin", "tekirdag", "elazig", "sivas", "batman", "erzurum",
-  "aksaray", "afyonkarahisar", "ordu", "tokat", "giresun", "corum",
-  "edirne", "kirklareli", "yalova", "bolu", "duzce", "bilecik",
-  "burdur", "isparta", "usak", "kutahya", "canakkale", "kastamonu",
-  "amasya", "nigde", "nevsehir", "kirikkale", "kirsehir", "yozgat",
-  "karaman", "aksaray", "cankiri", "sinop", "bartin", "karabuk",
-  "zonguldak", "rize", "artvin", "gumushane", "bayburt", "erzincan",
-  "tunceli", "bingol", "mus", "bitlis", "siirt", "sirnak",
-  "hakkari", "agri", "igdir", "kars", "ardahan", "osmaniye",
-  "kilis", "adiyaman", "sanliurfa"
-];
-
-const blogSlugs = [
-  "pilates-ile-zayiflama",
-  "reformer-pilates-nedir",
-  "hamilelikte-pilates",
-  "mat-pilates-egzersizleri",
-  "klinik-pilates-nedir",
-  "pilates-ve-beslenme",
-];
-
-export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPages = [
-    { url: BASE_URL, lastModified: new Date(), changeFrequency: "daily" as const, priority: 1 },
-    { url: BASE_URL + "/blog", lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-    { url: BASE_URL + "/hakkimizda", lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
-    { url: BASE_URL + "/iletisim", lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Static pages
+  const staticPages: MetadataRoute.Sitemap = [
+    { url: BASE_URL, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
+    { url: `${BASE_URL}/p-c`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
+    { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
+    { url: `${BASE_URL}/hakkimizda`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${BASE_URL}/iletisim`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${BASE_URL}/is-ortakligi`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE_URL}/yardim`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${BASE_URL}/kullanim-kosullari`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BASE_URL}/gizlilik-politikasi`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
   ];
 
-  const cityPages = cities.map((city) => ({
-    url: BASE_URL + "/p-c/" + city,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.9,
+  // City pages from Supabase
+  const { data: cities } = await supabase
+    .from('cities')
+    .select('slug, updated_at')
+    .order('studio_count', { ascending: false });
+
+  const cityPages: MetadataRoute.Sitemap = (cities || []).map((city) => ({
+    url: `${BASE_URL}/p-c/${city.slug}`,
+    lastModified: city.updated_at ? new Date(city.updated_at) : new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
   }));
 
-  const blogPages = blogSlugs.map((slug) => ({
-    url: BASE_URL + "/blog/" + slug,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
+  // Salon pages from Supabase
+  const { data: places } = await supabase
+    .from('places')
+    .select('slug, updated_at');
+
+  const salonPages: MetadataRoute.Sitemap = (places || []).map((place) => ({
+    url: `${BASE_URL}/salon/${place.slug}`,
+    lastModified: place.updated_at ? new Date(place.updated_at) : new Date(),
+    changeFrequency: 'weekly' as const,
     priority: 0.7,
   }));
 
-  return [...staticPages, ...cityPages, ...blogPages];
+  // Blog pages from Supabase
+  const { data: posts } = await supabase
+    .from('blog_posts')
+    .select('slug, updated_at')
+    .eq('status', 'published');
+
+  const blogPages: MetadataRoute.Sitemap = (posts || []).map((post) => ({
+    url: `${BASE_URL}/blog/${post.slug}`,
+    lastModified: post.updated_at ? new Date(post.updated_at) : new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...cityPages, ...salonPages, ...blogPages];
 }
