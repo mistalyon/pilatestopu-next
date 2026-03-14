@@ -1,78 +1,100 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
 import Link from "next/link";
+import { HelpCircle, MessageCircle, Mail, ChevronDown } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Yardım Merkezi | PilatesTopu",
-  description: "PilatesTopu.com sık sorulan sorular ve yardım merkezi.",
+  description: "PilatesTopu hakkında sık sorulan sorular, yardım ve destek. Pilates salonları, üyelik ve platform kullanımı hakkında bilgi alın.",
+  alternates: { canonical: "https://pilatestopu-next.vercel.app/yardim" },
 };
 
 const faqs = [
   {
-    q: "PilatesTopu.com nedir?",
-    a: "PilatesTopu.com, Türkiye genelinde pilates salonlarını, eğitmenleri ve pilates ile ilgili içerikleri bir araya getiren kapsamlı bir rehber platformudur.",
+    q: "PilatesTopu nedir?",
+    a: "PilatesTopu, Türkiye genelinde pilates salonlarını, dersleri ve ekipmanları keşfetmenizi sağlayan ücretsiz bir rehber platformudur. 81 ilde pilates salonu bilgilerine ulaşabilirsiniz."
   },
   {
-    q: "Salonumu nasıl listeleyebilirim?",
-    a: "Salonunuzu listelemek için İş Ortaklığı sayfamızdan veya WhatsApp üzerinden bizimle iletişime geçebilirsiniz.",
+    q: "Pilates salonumu nasıl ekleyebilirim?",
+    a: "İş Ortaklığı sayfamızdan başvuru yapabilir veya WhatsApp üzerinden bizimle iletişime geçebilirsiniz. Salon bilgilerinizi doğruladıktan sonra platformumuza ekliyoruz."
   },
   {
-    q: "Listeleme ücretli mi?",
-    a: "Temel listeleme ücretsizdir. Öne çıkarılmış listeleme ve ek özellikler için iletişime geçebilirsiniz.",
+    q: "Salon bilgileri ne sıklıkla güncelleniyor?",
+    a: "Salon bilgileri düzenli olarak güncellenmektedir. İşletme sahipleri, bilgilerinin güncellenmesi için bizimle iletişime geçebilir."
   },
   {
-    q: "Salon bilgilerimi nasıl güncelleyebilirim?",
-    a: "Salon bilgilerinizi güncellemek için info@pilatestopu.com adresine e-posta gönderebilir veya WhatsApp üzerinden bizimle iletişime geçebilirsiniz.",
-  },
-  {
-    q: "Pilates türleri arasındaki fark nedir?",
-    a: "Reformer pilates özel aletlerle yapılırken, mat pilates sadece bir mat üzerinde gerçekleştirilir. Klinik pilates ise fizyoterapistler eşliğinde rehabilitasyon amaçlı uygulanır.",
+    q: "PilatesTopu ücretsiz mi?",
+    a: "Evet, PilatesTopu kullanıcılar için tamamen ücretsizdir. Salon arama, bilgi görüntüleme ve blog yazılarını okuma gibi tüm özellikler ücretsiz olarak sunulmaktadır."
   },
   {
     q: "Nasıl iletişime geçebilirim?",
-    a: "Bize info@pilatestopu.com adresinden, +90 544 673 22 02 numarasından veya WhatsApp üzerinden ulaşabilirsiniz.",
+    a: "Bize WhatsApp üzerinden (+90 544 673 22 02) veya e-posta ile (info@pilatestopu.com) ulaşabilirsiniz. İletişim sayfamızdan da mesaj gönderebilirsiniz."
+  },
+  {
+    q: "Hangi şehirlerdeki salonları bulabilirim?",
+    a: "Türkiye’nin 81 ilindeki pilates salonlarını listeliyoruz. İstanbul, Ankara, İzmir gibi büyük şehirlerin yanı sıra tüm Anadolu’daki salonlara ulaşabilirsiniz."
   },
 ];
 
 export default function YardimPage() {
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(f => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   return (
-    <main className="min-h-screen bg-white">
-      <section className="bg-gradient-to-r from-purple-700 via-purple-600 to-pink-500 py-12">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold text-white">Yardım Merkezi</h1>
-          <p className="text-purple-100 mt-2">Sık sorulan sorular ve yardım</p>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+
+      <section className="bg-gradient-to-b from-[#F2DFF4] to-white py-12">
+        <div className="container mx-auto px-4 max-w-3xl text-center">
+          <HelpCircle className="w-12 h-12 text-[#730EC3] mx-auto mb-4" />
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Yardım Merkezi</h1>
+          <p className="text-gray-600">Sık sorulan sorular ve destek bilgileri</p>
         </div>
       </section>
-      <section className="max-w-4xl mx-auto px-4 py-12">
-        <div className="space-y-6">
+
+      <section className="container mx-auto px-4 max-w-3xl py-12">
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">Sık Sorulan Sorular</h2>
+        <div className="space-y-4">
           {faqs.map((faq, i) => (
-            <div key={i} className="bg-gray-50 rounded-xl p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-2">{faq.q}</h2>
-              <p className="text-gray-600">{faq.a}</p>
-            </div>
+            <details key={i} className="group bg-white rounded-xl border shadow-sm">
+              <summary className="flex items-center justify-between cursor-pointer p-5 font-medium text-gray-900 hover:text-[#730EC3] transition-colors">
+                {faq.q}
+                <ChevronDown className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" />
+              </summary>
+              <div className="px-5 pb-5 text-gray-600 leading-relaxed">{faq.a}</div>
+            </details>
           ))}
         </div>
+      </section>
 
-        <div className="mt-12 bg-purple-50 rounded-xl p-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Sorunuz mu var?</h2>
-          <p className="text-gray-600 mb-6">Aradığınız cevabı bulamadıysanız bize ulaşın.</p>
+      <section className="bg-gray-50 py-12">
+        <div className="container mx-auto px-4 max-w-3xl text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Hala Sorunuz mu Var?</h2>
+          <p className="text-gray-600 mb-6">Bize doğrudan ulaşabilirsiniz</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/iletisim"
-              className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors font-medium"
-            >
-              İletişim
-            </Link>
             <a
-              href="https://wa.me/905446732202"
+              href="https://wa.me/905446732202?text=Merhaba, yardım almak istiyorum."
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors font-medium"
+              className="inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-6 rounded-xl transition-colors"
             >
-              WhatsApp
+              <MessageCircle className="w-5 h-5" /> WhatsApp
+            </a>
+            <a
+              href="mailto:info@pilatestopu.com"
+              className="inline-flex items-center justify-center gap-2 bg-[#730EC3] hover:bg-[#5a0b9a] text-white font-medium py-3 px-6 rounded-xl transition-colors"
+            >
+              <Mail className="w-5 h-5" /> E-posta Gönder
             </a>
           </div>
         </div>
       </section>
-    </main>
+    </>
   );
 }
