@@ -2,29 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary: #730EC3;
-  --accent: #E91E90;
-  --teal: #00D4AA;
-}
-
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.hero-circle {
-  background: linear-gradient(135deg, #730EC3 0%, #E91E90 50%, #FF6BC1 100%);
+/* Focus visible styles for accessibility */
+*:focus-visible {
+  outline: 2px solid #730EC3;
+  outline-offset: 2px;
 }
 
-.text-gradient {
-  background: linear-gradient(135deg, #730EC3 0%, #E91E90 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Smooth transitions */
+a, button {
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+/* Selection color */
+::selection {
+  background-color: #730EC3;
+  color: white;
+}
+
+/* Prose image optimization */
+.prose img {
+  border-radius: 0.75rem;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4c4c4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #730EC3;
 }
