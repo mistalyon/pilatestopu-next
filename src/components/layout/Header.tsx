@@ -1,83 +1,117 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import Link from "next/link";
+import { useState } from "react";
+import { Menu, X, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
-  { href: '/', label: 'Anasayfa' },
-  { href: '/p-c/istanbul', label: 'Salonlar' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/hakkimizda', label: 'Hakk\u0131m\u0131zda' },
-  { href: '/iletisim', label: '\u0130leti\u015Fim' },
+  { name: "Anasayfa", href: "/" },
+  { name: "Salonlar", href: "/p-c" },
+  { name: "Blog", href: "/blog" },
+  { name: "Hakkımızda", href: "/hakkimizda" },
+  { name: "İletişim", href: "/iletisim" },
 ];
 
 export default function Header() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      const slug = searchQuery.trim().toLowerCase()
+        .replace(/ı/g, "i").replace(/ü/g, "u").replace(/ş/g, "s")
+        .replace(/ö/g, "o").replace(/ç/g, "c").replace(/ğ/g, "g")
+        .replace(/İ/g, "i").replace(/Ü/g, "u").replace(/Ş/g, "s")
+        .replace(/Ö/g, "o").replace(/Ç/g, "c").replace(/Ğ/g, "g")
+        .replace(/\s+/g, "-");
+      router.push(`/p-c/${slug}`);
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="https://www.pilatestopu.com/wp-content/uploads/2025/04/Pilates-Topu.png"
-              alt="PilatesTopu"
-              width={180}
-              height={40}
-              className="h-10 w-auto"
-              priority
-            />
-          </Link>
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+          <img
+            src="https://www.pilatestopu.com/wp-content/uploads/2025/04/Pilates-Topu.png"
+            alt="PilatesTopu"
+            className="h-8"
+          />
+        </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-gray-700 hover:text-purple-700 font-medium transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+        <nav className="hidden md:flex items-center gap-6">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-gray-700 hover:text-[#730EC3] transition-colors font-medium text-sm"
+            >
+              {link.name}
+            </Link>
+          ))}
+        </nav>
 
-          {/* Mobile Menu Button */}
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100"
-            aria-label="Men\u00FC"
+            onClick={() => setSearchOpen(!searchOpen)}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Ara"
           >
-            {mobileOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
+            <Search className="w-5 h-5 text-gray-600" />
+          </button>
+          <button
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menü"
+          >
+            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
+      </div>
 
-        {/* Mobile Nav */}
-        {mobileOpen && (
-          <nav className="md:hidden pb-4 border-t border-gray-100">
+      {searchOpen && (
+        <div className="border-t border-gray-100 bg-white px-4 py-3">
+          <form onSubmit={handleSearch} className="max-w-xl mx-auto flex gap-2">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Şehir adı yazın... (örn: İstanbul, Ankara)"
+              className="flex-1 px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#730EC3]/30 focus:border-[#730EC3] text-sm"
+              autoFocus
+            />
+            <button
+              type="submit"
+              className="bg-[#730EC3] hover:bg-[#5a0b9a] text-white px-4 py-2 rounded-xl transition-colors text-sm font-medium"
+            >
+              Ara
+            </button>
+          </form>
+        </div>
+      )}
+
+      {menuOpen && (
+        <div className="md:hidden border-t border-gray-100 bg-white shadow-lg">
+          <nav className="flex flex-col py-2">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="block py-3 px-2 text-gray-700 hover:text-purple-700 hover:bg-purple-50 rounded-lg font-medium"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#730EC3] transition-colors font-medium"
               >
-                {link.label}
+                {link.name}
               </Link>
             ))}
           </nav>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   );
 }
