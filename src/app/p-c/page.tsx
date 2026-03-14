@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { MapPin } from "lucide-react";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Türkiye Pilates Salonları | İl İl Pilates Rehberi - PilatesTopu",
-  description: "Türkiye\'nin 81 ilinde pilates salonları, reformer pilates stüdyoları ve eğitmenler. En yakın pilates salonunu bulun.",
-  keywords: "pilates salonları, türkiye pilates, reformer pilates, mat pilates, pilates rehberi",
+  description: "Türkiye'nin 81 ilinde pilates salonları, reformer pilates stüdyoları ve eğitmenler. En yakın pilates salonunu bulun.",
+  keywords: ["pilates salonları", "türkiye pilates", "reformer pilates", "mat pilates", "pilates rehberi"],
+  alternates: { canonical: "https://pilatestopu-next.vercel.app/p-c" },
+  openGraph: {
+    title: "Türkiye Pilates Salonları | 81 İlde Pilates Rehberi",
+    description: "Türkiye'nin 81 ilinde pilates salonlarını keşfedin. Reformer pilates, mat pilates ve daha fazlası.",
+    url: "https://pilatestopu-next.vercel.app/p-c",
+  },
 };
 
 async function getAllCities() {
@@ -29,10 +38,26 @@ export default async function SalonlarPage() {
     "Güneydoğu Anadolu": ["gaziantep", "diyarbakir", "sanliurfa", "mardin", "batman", "siirt", "sirnak", "adiyaman", "kilis"],
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: "https://pilatestopu-next.vercel.app" },
+      { "@type": "ListItem", position: 2, name: "Pilates Salonları" },
+    ],
+  };
+
   return (
-    <main className="min-h-screen">
-      <section className="bg-gradient-to-r from-purple-700 via-purple-600 to-pink-500 py-16">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+
+      <section className="bg-gradient-to-r from-[#730EC3] via-purple-600 to-[#E91E90] py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
+          <nav className="flex items-center justify-center gap-2 text-sm text-purple-200 mb-6">
+            <Link href="/" className="hover:text-white">Ana Sayfa</Link>
+            <span>/</span>
+            <span className="text-white font-medium">Pilates Salonları</span>
+          </nav>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Türkiye Pilates Salonları
           </h1>
@@ -43,27 +68,29 @@ export default async function SalonlarPage() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 py-16">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Popüler Şehirler</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-16">
-          {cities.slice(0, 12).map((city) => (
+          {cities.slice(0, 12).map((city: any) => (
             <Link
               key={city.slug}
               href={`/p-c/${city.slug}`}
-              className="bg-white border-2 border-purple-100 rounded-xl p-4 text-center hover:border-purple-400 hover:shadow-lg transition-all"
+              className="bg-white border-2 border-purple-100 rounded-xl p-4 text-center hover:border-[#730EC3] hover:shadow-lg transition-all group"
             >
+              <MapPin className="w-5 h-5 text-[#730EC3] mx-auto mb-1 group-hover:scale-110 transition-transform" />
               <span className="block font-bold text-gray-900 text-lg">{city.name}</span>
-              <span className="block text-sm text-purple-600 mt-1">{city.studio_count}+ salon</span>
+              <span className="block text-sm text-[#730EC3] mt-1">{city.studio_count}+ salon</span>
             </Link>
           ))}
         </div>
 
         {Object.entries(regions).map(([region, slugs]) => {
-          const regionCities = cities.filter((c) => slugs.includes(c.slug));
+          const regionCities = cities.filter((c: any) => slugs.includes(c.slug));
           if (regionCities.length === 0) return null;
           return (
             <div key={region} className="mb-12">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">{region} Bölgesi</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {regionCities.map((city) => (
+                {regionCities.map((city: any) => (
                   <Link
                     key={city.slug}
                     href={`/p-c/${city.slug}`}
@@ -78,6 +105,6 @@ export default async function SalonlarPage() {
           );
         })}
       </section>
-    </main>
+    </>
   );
 }
