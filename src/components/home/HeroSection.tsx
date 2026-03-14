@@ -2,13 +2,62 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+const turkishToSlug = (text: string): string => {
+  const charMap: Record<string, string> = {
+    'ç': 'c', 'Ç': 'c', 'ğ': 'g', 'Ğ': 'g',
+    'ı': 'i', 'İ': 'i', 'ö': 'o', 'Ö': 'o',
+    'ş': 's', 'Ş': 's', 'ü': 'u', 'Ü': 'u',
+  };
+  return text
+    .toLowerCase()
+    .split('')
+    .map((char) => charMap[char] || char)
+    .join('')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+};
+
+const popularCities = [
+  'İstanbul', 'Ankara', 'İzmir', 'Antalya', 'Bursa',
+  'Adana', 'Konya', 'Gaziantep', 'Mersin', 'Eskişehir',
+  'Kayseri', 'Samsun', 'Denizli', 'Muğla', 'Trabzon',
+];
+
+const pilatesTypes = [
+  'Reformer Pilates', 'Mat Pilates', 'Klinik Pilates',
+  'Hamile Pilatesi', 'Çocuk Pilatesi', 'Hava Pilatesi',
+];
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
+  const [cityQuery, setCityQuery] = useState('');
+  const [showCitySuggestions, setShowCitySuggestions] = useState(false);
+  const [selectedType, setSelectedType] = useState('');
+  const [showTypeSuggestions, setShowTypeSuggestions] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const filteredCities = popularCities.filter((city) =>
+    city.toLowerCase().includes(cityQuery.toLowerCase())
+  );
+
+  const handleSearch = () => {
+    if (cityQuery.trim()) {
+      const slug = turkishToSlug(cityQuery.trim());
+      router.push(`/p-c/${slug}`);
+    } else {
+      router.push('/p-c');
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') handleSearch();
+  };
 
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: '#F2DFF4' }}>
@@ -37,32 +86,116 @@ export default function HeroSection() {
 
             {/* Search Bar */}
             <div
-              className="bg-white rounded-full shadow-lg flex items-center max-w-lg overflow-hidden transition-all duration-700 delay-200"
+              className="relative bg-white rounded-full shadow-lg flex items-center max-w-lg overflow-visible transition-all duration-700 delay-200"
               style={{
                 opacity: mounted ? 1 : 0,
                 transform: mounted ? 'translateY(0)' : 'translateY(20px)',
               }}
             >
-              <div className="flex-1 flex items-center border-r border-gray-200">
-                <div className="px-5 py-4 w-full">
-                  <span className="text-sm font-semibold text-gray-800">Konum</span>
-                  <span className="text-sm text-gray-400 ml-1">seçiniz...</span>
+              {/* City Input */}
+              <div className="relative flex-1 border-r border-gray-200">
+                <div className="px-5 py-3">
+                  <label className="text-xs font-semibold text-gray-800 block">Şehir</label>
+                  <input
+                    type="text"
+                    value={cityQuery}
+                    onChange={(e) => {
+                      setCityQuery(e.target.value);
+                      setShowCitySuggestions(true);
+                    }}
+                    onFocus={() => setShowCitySuggestions(true)}
+                    onBlur={() => setTimeout(() => setShowCitySuggestions(false), 200)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Şehir seçiniz..."
+                    className="text-sm text-gray-600 w-full outline-none bg-transparent placeholder-gray-400"
+                  />
                 </div>
+                {showCitySuggestions && filteredCities.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 max-h-48 overflow-y-auto z-50">
+                    {filteredCities.map((city) => (
+                      <button
+                        key={city}
+                        className="w-full text-left px-4 py-2.5 text-sm hover:bg-purple-50 transition-colors first:rounded-t-xl last:rounded-b-xl"
+                        onMouseDown={() => {
+                          setCityQuery(city);
+                          setShowCitySuggestions(false);
+                        }}
+                      >
+                        {city}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div className="flex-1 flex items-center">
-                <div className="px-5 py-4 w-full">
-                  <span className="text-sm font-semibold text-gray-800">Kategori</span>
-                  <span className="text-sm text-gray-400 ml-1">seçiniz...</span>
+
+              {/* Type Select */}
+              <div className="relative flex-1">
+                <div className="px-5 py-3">
+                  <label className="text-xs font-semibold text-gray-800 block">Kategori</label>
+                  <input
+                    type="text"
+                    value={selectedType}
+                    onChange={(e) => {
+                      setSelectedType(e.target.value);
+                      setShowTypeSuggestions(true);
+                    }}
+                    onFocus={() => setShowTypeSuggestions(true)}
+                    onBlur={() => setTimeout(() => setShowTypeSuggestions(false), 200)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Tür seçiniz..."
+                    className="text-sm text-gray-600 w-full outline-none bg-transparent placeholder-gray-400"
+                    readOnly
+                  />
                 </div>
+                {showTypeSuggestions && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 max-h-48 overflow-y-auto z-50">
+                    {pilatesTypes.map((type) => (
+                      <button
+                        key={type}
+                        className="w-full text-left px-4 py-2.5 text-sm hover:bg-purple-50 transition-colors first:rounded-t-xl last:rounded-b-xl"
+                        onMouseDown={() => {
+                          setSelectedType(type);
+                          setShowTypeSuggestions(false);
+                        }}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
+
+              {/* Search Button */}
               <button
-                className="flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center mr-1"
+                onClick={handleSearch}
+                className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center mr-1 hover:opacity-90 transition-opacity cursor-pointer"
                 style={{ backgroundColor: '#730EC3' }}
+                aria-label="Pilates salonu ara"
               >
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
+            </div>
+
+            {/* Popular Cities Quick Links */}
+            <div
+              className="mt-6 flex flex-wrap gap-2 transition-all duration-700 delay-300"
+              style={{
+                opacity: mounted ? 1 : 0,
+                transform: mounted ? 'translateY(0)' : 'translateY(20px)',
+              }}
+            >
+              <span className="text-xs text-gray-500 mr-1 self-center">Popüler:</span>
+              {['İstanbul', 'Ankara', 'İzmir', 'Antalya', 'Bursa'].map((city) => (
+                <a
+                  key={city}
+                  href={`/p-c/${turkishToSlug(city)}`}
+                  className="text-xs px-3 py-1.5 bg-white/70 hover:bg-white rounded-full text-gray-700 hover:text-purple-700 transition-colors"
+                >
+                  {city}
+                </a>
+              ))}
             </div>
           </div>
 
@@ -91,10 +224,11 @@ export default function HeroSection() {
               <div className="relative z-10 w-72 h-96 md:w-80 md:h-[480px]">
                 <Image
                   src="https://pilatestopu.com/wp-content/uploads/2025/04/en-yakin-pilates-salonu-783x1024.png"
-                  alt="Pilates salonları ve eğitmenler"
+                  alt="Pilates salonları ve eğitmenler - Türkiye'nin en kapsamlı pilates rehberi"
                   fill
                   className="object-contain"
                   priority
+                  sizes="(max-width: 768px) 288px, 320px"
                 />
               </div>
             </div>
