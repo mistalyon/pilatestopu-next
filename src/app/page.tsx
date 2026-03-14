@@ -8,31 +8,31 @@ import CTASection from '@/components/home/CTASection';
 import SeoContentSection from '@/components/home/SeoContentSection';
 import JsonLd from '@/components/seo/JsonLd';
 
-export default function Home() {
-  const jsonLd = {
-      '@context': 'https://schema.org',
-          '@type': 'WebSite',
-              name: 'PilatesTopu.com',
-                  url: 'https://pilatestopu.com',
-                      description: "Türkiye'nin en kapsamlı pilates rehberi",
-                          potentialAction: {
-                                '@type': 'SearchAction',
-                                      target: 'https://pilatestopu.com/ara?q={search_term_string}',
-                                            'query-input': 'required name=search_term_string',
-                                                },
-                                                  };
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'PilatesTopu.com',
+  url: 'https://pilatestopu.com',
+  description: 'Turkiye\'nin en kapsamli pilates rehberi',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://pilatestopu.com/ara?q={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+};
 
-                                                    return (
-                                                        <>
-                                                              <JsonLd data={jsonLd} />
-                                                                    <HeroSection />
-                                                                          <PilatesTypesSection />
-                                                                                <FeaturedStudios />
-                                                                                      <TestimonialsSection />
-                                                                                            <PopularCitiesSection />
-                                                                                                  <BlogPreviewSection />
-                                                                                                        <CTASection />
-                                                                                                              <SeoContentSection />
-                                                                                                                  </>
-                                                                                                                    );
-                                                                                                                    }
+export default function Home() {
+  return (
+    <>
+      <JsonLd data={websiteJsonLd} />
+      <HeroSection />
+      <PilatesTypesSection />
+      <FeaturedStudios />
+      <TestimonialsSection />
+      <PopularCitiesSection />
+      <BlogPreviewSection />
+      <CTASection />
+      <SeoContentSection />
+    </>
+  );
+}
