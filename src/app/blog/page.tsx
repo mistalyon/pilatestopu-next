@@ -8,13 +8,19 @@ export const metadata: Metadata = {
 };
 
 async function getBlogPosts() {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("blog_posts")
-    .select("id, title, slug, excerpt, featured_image, published_at, categories(name, slug)")
+    .select("id, title, slug, excerpt, featured_image, published_at, created_at")
     .eq("status", "published")
     .order("published_at", { ascending: false });
+  if (error) {
+    console.error("Blog posts error:", error);
+    return [];
+  }
   return data || [];
 }
+
+export const revalidate = 60;
 
 export default async function BlogPage() {
   const posts = await getBlogPosts();
@@ -47,22 +53,15 @@ export default async function BlogPage() {
                   </div>
                 )}
                 <div className="p-6">
-                  {post.categories && (
-                    <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">
-                      {(post.categories as any).name}
-                    </span>
-                  )}
-                  <h2 className="text-xl font-bold text-gray-900 mt-3 mb-2 group-hover:text-purple-600 transition-colors">
+                  <h2 className="text-xl font-bold text-gray-900 mt-1 mb-2 group-hover:text-purple-600 transition-colors">
                     {post.title}
                   </h2>
                   {post.excerpt && (
                     <p className="text-gray-600 text-sm line-clamp-3">{post.excerpt}</p>
                   )}
-                  {post.published_at && (
-                    <p className="text-gray-400 text-xs mt-3">
-                      {new Date(post.published_at).toLocaleDateString("tr-TR", { year: "numeric", month: "long", day: "numeric" })}
-                    </p>
-                  )}
+                  <p className="text-gray-400 text-xs mt-3">
+                    {new Date(post.published_at || post.created_at).toLocaleDateString("tr-TR", { year: "numeric", month: "long", day: "numeric" })}
+                  </p>
                 </div>
               </Link>
             ))}
