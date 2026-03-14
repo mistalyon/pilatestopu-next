@@ -1,96 +1,85 @@
-import Link from 'next/link';
-
-const popularCities = [
-  { name: 'İstanbul', slug: 'istanbul' },
-  { name: 'Ankara', slug: 'ankara' },
-  { name: 'İzmir', slug: 'izmir' },
-  { name: 'Antalya', slug: 'antalya' },
-  { name: 'Bursa', slug: 'bursa' },
-  { name: 'Eskişehir', slug: 'eskisehir' },
-];
+import Link from "next/link";
+import { MapPin, Phone, Mail, MessageCircle } from "lucide-react";
 
 const footerLinks = {
-  kurumsal: [
-    { href: '/hakkimizda', label: 'Hakkımızda' },
-    { href: '/iletisim', label: 'İletişim' },
-    { href: '/is-ortakligi', label: 'İş Ortaklığı' },
-    { href: '/blog', label: 'Blog' },
+  "Pilates Rehberi": [
+    { name: "İstanbul Pilates", href: "/p-c/istanbul" },
+    { name: "Ankara Pilates", href: "/p-c/ankara" },
+    { name: "İzmir Pilates", href: "/p-c/izmir" },
+    { name: "Antalya Pilates", href: "/p-c/antalya" },
+    { name: "Bursa Pilates", href: "/p-c/bursa" },
+    { name: "Tüm Şehirler", href: "/p-c" },
   ],
-  yasal: [
-    { href: '/kullanim-kosullari', label: 'Kullanım Koşulları' },
-    { href: '/gizlilik-politikasi', label: 'Gizlilik Politikası' },
-    { href: '/yardim-merkezi', label: 'Yardım Merkezi' },
+  "Hakkımızda": [
+    { name: "Hakkımızda", href: "/hakkimizda" },
+    { name: "Blog", href: "/blog" },
+    { name: "İş Ortaklığı", href: "/is-ortakligi" },
+    { name: "İletişim", href: "/iletisim" },
+  ],
+  "Destek": [
+    { name: "Yardım Merkezi", href: "/yardim" },
+    { name: "Kullanım Koşulları", href: "/kullanim-kosullari" },
+    { name: "Gizlilik Politikası", href: "/gizlilik-politikasi" },
   ],
 };
 
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <Link href="/" className="text-2xl font-bold text-white">
-              PilatesTopu
+            <Link href="/" className="inline-block mb-4">
+              <img
+                src="https://www.pilatestopu.com/wp-content/uploads/2025/04/Pilates-Topu.png"
+                alt="PilatesTopu"
+                className="h-10 brightness-0 invert"
+              />
             </Link>
-            <p className="mt-4 text-sm leading-relaxed">
-              Türkiye&apos;nin en kapsamlı pilates rehberi. En iyi pilates salonlarını, eğitmenleri ve dersleri keşfedin.
+            <p className="text-sm text-gray-400 mb-4">
+              Türkiye’nin en kapsamlı pilates rehberi. 81 ilde pilates salonları, dersler ve ekipmanlar.
             </p>
-            <div className="mt-4 flex gap-4">
-              <a href="mailto:info@pilatestopu.com" className="hover:text-white transition-colors">
-                info@pilatestopu.com
+            <div className="space-y-2 text-sm">
+              <a href="tel:+905446732202" className="flex items-center gap-2 hover:text-white transition-colors">
+                <Phone className="w-4 h-4" /> +90 544 673 22 02
+              </a>
+              <a href="mailto:info@pilatestopu.com" className="flex items-center gap-2 hover:text-white transition-colors">
+                <Mail className="w-4 h-4" /> info@pilatestopu.com
+              </a>
+              <a
+                href="https://wa.me/905446732202"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:text-green-400 transition-colors"
+              >
+                <MessageCircle className="w-4 h-4" /> WhatsApp
               </a>
             </div>
-            <p className="mt-2 text-sm">+90 544 673 22 02</p>
-            <p className="text-sm">Balat, Fatih / İstanbul</p>
           </div>
 
-          {/* Popular Cities */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Popüler Şehirler</h3>
-            <ul className="space-y-2">
-              {popularCities.map((city) => (
-                <li key={city.slug}>
-                  <Link href={`/p-c/${city.slug}`} className="text-sm hover:text-white transition-colors">
-                    {city.name} Pilates Salonları
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Corporate */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Kurumsal</h3>
-            <ul className="space-y-2">
-              {footerLinks.kurumsal.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-sm hover:text-white transition-colors">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Yasal</h3>
-            <ul className="space-y-2">
-              {footerLinks.yasal.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-sm hover:text-white transition-colors">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {Object.entries(footerLinks).map(([title, links]) => (
+            <div key={title}>
+              <h3 className="text-white font-semibold mb-4">{title}</h3>
+              <ul className="space-y-2">
+                {links.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="text-sm hover:text-white transition-colors">
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-gray-700 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} PilatesTopu. Tüm hakları saklıdır.</p>
+        <div className="border-t border-gray-800 mt-10 pt-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+            <p>&copy; {new Date().getFullYear()} PilatesTopu. Tüm hakları saklıdır.</p>
+            <div className="flex items-center gap-1 text-xs">
+              <MapPin className="w-3 h-3" /> Türkiye
+            </div>
+          </div>
         </div>
       </div>
     </footer>
