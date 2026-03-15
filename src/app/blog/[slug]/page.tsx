@@ -8,6 +8,7 @@ import { Calendar, ArrowLeft, Clock, Tag } from "lucide-react";
 export const revalidate = 3600;
 
 const DEFAULT_IMG = "https://www.pilatestopu.com/wp-content/uploads/2022/06/aletli-pilates.png";
+const SITE_URL = "https://pilatestopu-next.vercel.app";
 
 async function getPost(slug: string) {
   const { data } = await supabase
@@ -18,7 +19,7 @@ async function getPost(slug: string) {
   return data;
 }
 
-async function getRelatedPosts(currentSlug: string) {
+async function getRelatedPosts(currentSlug: string, focusKeyword: string | null) {
   const { data } = await supabase
     .from("blog_posts")
     .select("id, title, slug, excerpt, image_url, focus_keyword")
@@ -32,14 +33,30 @@ async function getRelatedPosts(currentSlug: string) {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await getPost(params.slug);
   if (!post) return { title: "Yazı Bulunamadı" };
+  const imgUrl = post.image_url || DEFAULT_IMG;
   return {
     title: post.title + " | PilatesTopu",
     description: post.meta_description || post.excerpt,
-    keywords: post.focus_keyword ? [post.focus_keyword] : [],
+    keywords: post.focus_keyword ? post.focus_keyword.split(",").map(function(k: string) { return k.trim(); }) : [],
+    authors: [{ name: "PilatesTopu" }],
     openGraph: {
       title: post.title,
       description: post.meta_description || post.excerpt,
-      images: [{ url: post.image_url || DEFAULT_IMG }],
+      url: SITE_URL + "/blog/" + post.slug,
+      siteName: "PilatesTopu",
+      images: [{ url: imgUrl, width: 1024, height: 680, alt: post.title }],
+      type: "article",
+      publishedTime: post.created_at,
+      modifiedTime: post.updated_at || post.created_at,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.meta_description || post.excerpt,
+      images: [imgUrl],
+    },
+    alternates: {
+      canonical: SITE_URL + "/blog/" + post.slug,
     },
   };
 }
@@ -47,12 +64,43 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = await getPost(params.slug);
   if (!post) notFound();
-  const readTime = Math.ceil((post.content || "").split(" ").length / 200);
-  const relatedPosts = await getRelatedPosts(params.slug);
+  const wordCount = (post.content || "").split(" ").length;
+  const readTime = Math.ceil(wordCount / 200);
+  const relatedPosts = await getRelatedPosts(params.slug, post.focus_keyword);
   const imgSrc = post.image_url || DEFAULT_IMG;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.meta_description || post.excerpt,
+    image: imgSrc,
+    datePublished: post.created_at,
+    dateModified: post.updated_at || post.created_at,
+    author: { "@type": "Organization", name: "PilatesTopu", url: SITE_URL },
+    publisher: { "@type": "Organization", name: "PilatesTopu", logo: { "@type": "ImageObject", url: "https://www.pilatestopu.com/wp-content/uploads/2025/04/Pilates-Topu.png" } },
+    mainEntityOfPage: { "@type": "WebPage", "@id": SITE_URL + "/blog/" + post.slug },
+    wordCount: wordCount,
+    keywords: post.focus_keyword || "",
+    articleSection: "Pilates",
+    inLanguage: "tr-TR",
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Blog", item: SITE_URL + "/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: SITE_URL + "/blog/" + post.slug },
+    ],
+  };
 
   return (
     <main className="min-h-screen bg-gray-50">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+
       <section className="bg-gradient-to-r from-[#730EC3] to-[#E91E90] py-10 text-white">
         <div className="container mx-auto px-4 max-w-4xl">
           <nav className="flex items-center gap-2 text-sm text-white/70 mb-4">
@@ -66,7 +114,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           <div className="flex flex-wrap items-center gap-4 text-sm text-white/80">
             <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{new Date(post.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}</span>
             <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{readTime} dk okuma</span>
-            {post.focus_keyword && <span className="flex items-center gap-1"><Tag className="w-4 h-4" />{post.focus_keyword}</span>}
+            {post.focus_keyword && <span className="flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded-full"><Tag className="w-3 h-3" />{post.focus_keyword}</span>}
           </div>
         </div>
       </section>
@@ -77,7 +125,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         </div>
         {post.content && (
           <div
-            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-a:text-[#730EC3] prose-strong:text-gray-800 prose-p:text-gray-700 prose-li:text-gray-700"
+            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-headings:font-bold prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-a:text-[#730EC3] prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-800 prose-p:text-gray-700 prose-p:leading-relaxed prose-li:text-gray-700 prose-img:rounded-xl prose-img:shadow-md"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         )}
@@ -92,7 +140,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 return (
                   <Link key={rp.id} href={"/blog/" + rp.slug} className="group bg-gray-50 rounded-xl overflow-hidden hover:shadow-md transition-all">
                     <div className="relative h-40 w-full">
-                      <Image src={rp.image_url || DEFAULT_IMG} alt={rp.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+                      <Image src={rp.image_url || DEFAULT_IMG} alt={rp.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" sizes="(max-width: 768px) 100vw, 33vw" />
                     </div>
                     <div className="p-4">
                       <h3 className="font-semibold text-gray-900 group-hover:text-[#730EC3] transition-colors line-clamp-2">{rp.title}</h3>
@@ -107,7 +155,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       )}
 
       <div className="container mx-auto px-4 max-w-4xl py-8">
-        <Link href="/blog" className="inline-flex items-center gap-2 text-[#730EC3] hover:underline">
+        <Link href="/blog" className="inline-flex items-center gap-2 text-[#730EC3] hover:underline font-medium">
           <ArrowLeft className="w-4 h-4" />
           Tüm Yazılara Dön
         </Link>
