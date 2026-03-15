@@ -21,7 +21,7 @@ async function getPost(slug: string) {
 async function getRelatedPosts(currentSlug: string) {
   const { data } = await supabase
     .from("blog_posts")
-    .select("id, title, slug, excerpt, image_url")
+    .select("id, title, slug, excerpt, image_url, focus_keyword")
     .eq("status", "published")
     .neq("slug", currentSlug)
     .order("created_at", { ascending: false })
@@ -31,7 +31,7 @@ async function getRelatedPosts(currentSlug: string) {
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await getPost(params.slug);
-  if (!post) return { title: "Yaz\u0131 Bulunamad\u0131" };
+  if (!post) return { title: "Yazı Bulunamadı" };
   return {
     title: post.title + " | PilatesTopu",
     description: post.meta_description || post.excerpt,
@@ -47,7 +47,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = await getPost(params.slug);
   if (!post) notFound();
-
   const readTime = Math.ceil((post.content || "").split(" ").length / 200);
   const relatedPosts = await getRelatedPosts(params.slug);
   const imgSrc = post.image_url || DEFAULT_IMG;
@@ -74,37 +73,26 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
       <article className="container mx-auto px-4 max-w-4xl py-10">
         <div className="mb-8 rounded-2xl overflow-hidden shadow-lg">
-          <Image
-            src={imgSrc}
-            alt={post.title}
-            width={1024}
-            height={680}
-            className="w-full h-auto object-cover"
-            priority
-          />
+          <Image src={imgSrc} alt={post.title} width={1024} height={680} className="w-full h-auto object-cover" priority />
         </div>
-        <div
-          className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-a:text-[#730EC3] prose-strong:text-gray-800 prose-p:text-gray-700 prose-li:text-gray-700"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        {post.content && (
+          <div
+            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-a:text-[#730EC3] prose-strong:text-gray-800 prose-p:text-gray-700 prose-li:text-gray-700"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+        )}
       </article>
 
       {relatedPosts.length > 0 && (
         <section className="bg-white py-12">
           <div className="container mx-auto px-4 max-w-4xl">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">\u0130lgili Yaz\u0131lar</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">İlgili Yazılar</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {relatedPosts.map(function(rp: any) {
                 return (
                   <Link key={rp.id} href={"/blog/" + rp.slug} className="group bg-gray-50 rounded-xl overflow-hidden hover:shadow-md transition-all">
                     <div className="relative h-40 w-full">
-                      <Image
-                        src={rp.image_url || DEFAULT_IMG}
-                        alt={rp.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                      />
+                      <Image src={rp.image_url || DEFAULT_IMG} alt={rp.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                     </div>
                     <div className="p-4">
                       <h3 className="font-semibold text-gray-900 group-hover:text-[#730EC3] transition-colors line-clamp-2">{rp.title}</h3>
@@ -120,7 +108,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
       <div className="container mx-auto px-4 max-w-4xl py-8">
         <Link href="/blog" className="inline-flex items-center gap-2 text-[#730EC3] hover:underline">
-          <ArrowLeft className="w-4 h-4" /> T\u00fcm Yaz\u0131lara D\u00f6n
+          <ArrowLeft className="w-4 h-4" />
+          Tüm Yazılara Dön
         </Link>
       </div>
     </main>
