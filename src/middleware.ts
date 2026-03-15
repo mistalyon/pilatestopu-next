@@ -1,29 +1,33 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// WordPress → Next.js URL redirect haritası
 const redirectMap: Record<string, string> = {
-  // WordPress kategori sayfaları
   '/category/pilates-egersizleri': '/blog',
   '/category/pilates-ekipmanlari': '/blog',
   '/category/pilates-turleri': '/blog',
   '/category/saglikli-yasam': '/blog',
-
-  // WordPress sayfa yapısı
   '/pilates-salonlari': '/p-c',
   '/en-yakin-pilates-salonu': '/p-c',
-  '/pilates-nedir': '/blog',
-  '/reformer-pilates-nedir': '/blog',
-  '/mat-pilates-nedir': '/blog',
-  '/klinik-pilates-nedir': '/blog',
-  '/hamile-pilatesi': '/blog',
-  '/pilates-topu-nasil-kullanilir': '/blog',
   '/hakkimizda-2': '/hakkimizda',
   '/feed': '/blog',
   '/wp-sitemap.xml': '/sitemap.xml',
+  // Blog yazıları - eski URL -> yeni URL
+  '/pilates-nedir': '/blog/pilates-nedir-temel-ilkeleri-faydalari-ve-baslangic-rehberi',
+  '/reformer-pilates-nedir': '/blog/reformer-pilates-nedir',
+  '/mat-pilates-nedir': '/blog/mat-pilates-egzersizleri',
+  '/klinik-pilates-nedir': '/blog/klinik-pilates-nedir',
+  '/hamile-pilatesi': '/blog/hamile-pilatesi-rehberi',
+  '/pilates-topu-nasil-kullanilir': '/blog/pilates-topu-hareketleri-rehberi',
+  '/boyun-duzlesmesi-nedenleri-belirtileri-egzersizleri': '/blog/boyun-duzlesmesi-nedenleri-belirtileri-egzersizleri',
+  '/pilates-etkinlikleri-icin-saglikli-ikramlar-catering-ipuclari': '/blog/pilates-etkinlikleri-icin-saglikli-ikramlar-catering-ipuclari',
+  '/pilates-lastigi-hareketleri-evde-tum-vucut-antrenmani': '/blog/pilates-lastigi-hareketleri-evde-tum-vucut-antrenmani',
+  '/reformer-pilates-oncesi-sonrasi': '/blog/reformer-pilates-oncesi-sonrasi',
+  '/reformer-pilates-sonrasi-agri': '/blog/reformer-pilates-sonrasi-agri',
+  '/pilates-topu-hareketleri-rehberi': '/blog/pilates-topu-hareketleri-rehberi',
+  '/pilates-ile-kilo-verme': '/blog/pilates-ile-zayiflama',
+  '/pilates-yaparken-beslenme': '/blog/pilates-ve-beslenme',
 };
 
-// Şehir yönlendirmeleri
 const cityRedirects: Record<string, string> = {
   '/istanbul-pilates-salonlari': '/p-c/istanbul',
   '/ankara-pilates-salonlari': '/p-c/ankara',
@@ -42,9 +46,7 @@ const cityRedirects: Record<string, string> = {
   '/denizli-pilates-salonlari': '/p-c/denizli',
 };
 
-// İlçe/Semt yönlendirmeleri (WordPress neighborhood slugları)
 const neighborhoodRedirects: Record<string, string> = {
-  // İstanbul
   '/akatlar-pilates': '/p-c/istanbul/akatlar',
   '/alibeykoy-pilates': '/p-c/istanbul/alibeykoy',
   '/atakoy-pilates': '/p-c/istanbul/atakoy',
@@ -78,112 +80,69 @@ const neighborhoodRedirects: Record<string, string> = {
   '/umraniye-pilates': '/p-c/istanbul/umraniye',
   '/yesilkoy-pilates': '/p-c/istanbul/yesilkoy',
   '/zeytinburnu-pilates': '/p-c/istanbul/zeytinburnu',
-  // İzmir
   '/aliaga-pilates': '/p-c/izmir/aliaga',
   '/cigli-pilates': '/p-c/izmir/cigli',
   '/sirinyer-pilates': '/p-c/izmir/sirinyer',
-  // Bursa
-  '/bursa-yenisehir-pilates': '/p-c/bursa/bursa-yenisehir',
   '/gorukle-pilates': '/p-c/bursa/gorukle',
   '/mudanya-pilates': '/p-c/bursa/mudanya',
   '/nilufer-pilates': '/p-c/bursa/nilufer',
   '/ozluce-pilates': '/p-c/bursa/ozluce',
   '/yildirim-pilates': '/p-c/bursa/yildirim',
-  // Diğer
   '/ceyhan-pilates': '/p-c/adana/ceyhan',
-  '/akcakoca-pilates': '/p-c/duzce/akcakoca',
   '/iskenderun-pilates': '/p-c/hatay/iskenderun',
-  '/mersin-yenisehir-pilates': '/p-c/mersin/mersin-yenisehir',
-  '/yerkoey-pilates': '/p-c/yozgat/yerkoey',
 };
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
-  // Trailing slash kaldır
   if (pathname !== '/' && pathname.endsWith('/')) {
     const url = request.nextUrl.clone();
     url.pathname = pathname.slice(0, -1);
     return NextResponse.redirect(url, 301);
   }
-
-  // Statik yönlendirmeler
   if (redirectMap[pathname]) {
     const url = request.nextUrl.clone();
     url.pathname = redirectMap[pathname];
     return NextResponse.redirect(url, 301);
   }
-
-  // Şehir yönlendirmeleri
   if (cityRedirects[pathname]) {
     const url = request.nextUrl.clone();
     url.pathname = cityRedirects[pathname];
     return NextResponse.redirect(url, 301);
   }
-
-  // İlçe/Semt yönlendirmeleri
   if (neighborhoodRedirects[pathname]) {
     const url = request.nextUrl.clone();
     url.pathname = neighborhoodRedirects[pathname];
     return NextResponse.redirect(url, 301);
   }
-
-  // WordPress wp-* yollarını engelle
   if (pathname.startsWith('/wp-admin') || pathname.startsWith('/wp-content') || pathname.startsWith('/wp-includes')) {
     const url = request.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url, 301);
   }
-
-  // .php dosyalarını engelle
   if (pathname.endsWith('.php')) {
     const url = request.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url, 301);
   }
-
-  // /author/* -> /hakkimizda
   if (pathname.startsWith('/author/')) {
     const url = request.nextUrl.clone();
     url.pathname = '/hakkimizda';
     return NextResponse.redirect(url, 301);
   }
-
-  // /tag/* -> /blog
   if (pathname.startsWith('/tag/')) {
     const url = request.nextUrl.clone();
     url.pathname = '/blog';
     return NextResponse.redirect(url, 301);
   }
-
-  // /page/N -> /blog
-  if (/^\/page\/\d+$/.test(pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/blog';
-    return NextResponse.redirect(url, 301);
-  }
-
-  // Genel {sehir}-pilates-salonlari pattern
   const cityMatch = pathname.match(/^\/([a-z-]+)-pilates-salonlari$/);
   if (cityMatch) {
     const url = request.nextUrl.clone();
-    url.pathname = `/p-c/${cityMatch[1]}`;
+    url.pathname = '/p-c/' + cityMatch[1];
     return NextResponse.redirect(url, 301);
   }
-
-  // Genel {semt}-pilates pattern
-  const neighborhoodMatch = pathname.match(/^\/([a-z-]+)-pilates$/);
-  if (neighborhoodMatch && !pathname.includes('salonlari')) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/p-c';
-    return NextResponse.redirect(url, 301);
-  }
-
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
-  ],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'],
 };
