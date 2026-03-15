@@ -11,21 +11,55 @@ const redirectMap: Record<string, string> = {
   '/hakkimizda-2': '/hakkimizda',
   '/feed': '/blog',
   '/wp-sitemap.xml': '/sitemap.xml',
-  // Blog yazıları - eski URL -> yeni URL
+  // WP blog post slugs -> new blog slugs
   '/pilates-nedir': '/blog/pilates-nedir-temel-ilkeleri-faydalari-ve-baslangic-rehberi',
   '/reformer-pilates-nedir': '/blog/reformer-pilates-nedir',
   '/mat-pilates-nedir': '/blog/mat-pilates-egzersizleri',
   '/klinik-pilates-nedir': '/blog/klinik-pilates-nedir',
   '/hamile-pilatesi': '/blog/hamile-pilatesi-rehberi',
   '/pilates-topu-nasil-kullanilir': '/blog/pilates-topu-hareketleri-rehberi',
-  '/boyun-duzlesmesi-nedenleri-belirtileri-egzersizleri': '/blog/boyun-duzlesmesi-nedenleri-belirtileri-egzersizleri',
-  '/pilates-etkinlikleri-icin-saglikli-ikramlar-catering-ipuclari': '/blog/pilates-etkinlikleri-icin-saglikli-ikramlar-catering-ipuclari',
-  '/pilates-lastigi-hareketleri-evde-tum-vucut-antrenmani': '/blog/pilates-lastigi-hareketleri-evde-tum-vucut-antrenmani',
-  '/reformer-pilates-oncesi-sonrasi': '/blog/reformer-pilates-oncesi-sonrasi',
   '/reformer-pilates-sonrasi-agri': '/blog/reformer-pilates-sonrasi-agri',
   '/pilates-topu-hareketleri-rehberi': '/blog/pilates-topu-hareketleri-rehberi',
   '/pilates-ile-kilo-verme': '/blog/pilates-ile-zayiflama',
   '/pilates-yaparken-beslenme': '/blog/pilates-ve-beslenme',
+  '/reformer-pilates': '/blog/reformer-pilates-nedir',
+  '/reformer-pilates-oncesi-sonrasi': '/blog/reformer-pilates-oncesi-sonrasi',
+  '/resimli-ve-videolu-pilates-topu-hareketleri': '/blog/pilates-topu-hareketleri-rehberi',
+  '/boyun-duzlesmesi-nedenleri-belirtileri-egzersizleri': '/blog/boyun-duzlesmesi-nedenleri-belirtileri-egzersizleri',
+  '/pilates-etkinlikleri-saglikli-ikramlar-catering': '/blog/pilates-etkinlikleri-icin-saglikli-ikramlar-catering-ipuclari',
+  '/pilates-lastigi-hareketleri': '/blog/pilates-lastigi-hareketleri-evde-tum-vucut-antrenmani',
+  // WP system pages -> redirect to appropriate pages
+  '/faqs': '/yardim',
+  '/isletme-ekle': '/is-ortakligi',
+  '/shop': '/',
+  '/shop-2': '/',
+  '/cart': '/',
+  '/cart-2': '/',
+  '/checkout': '/',
+  '/checkout-2': '/',
+  '/my-account': '/',
+  '/my-account-2': '/',
+  '/my-account-3': '/',
+  '/login': '/',
+  '/lost-password': '/',
+  '/membership-registration': '/',
+  '/membership-pricing': '/',
+  '/membership-thankyou': '/',
+  '/payment': '/',
+  '/payment-completed': '/',
+  '/packages': '/',
+  '/my-booking': '/',
+  '/my-wishlist': '/',
+  '/my-profile': '/',
+  '/my-places': '/',
+  '/yonetim-paneli': '/',
+  '/randevular': '/',
+  '/maintainance': '/',
+  '/maintain': '/',
+  '/coming-soon': '/',
+  '/country': '/p-c',
+  '/yardim-merkezi': '/yardim',
+  '/gizlilik-politikasi-ve-kisisel-verilerin-korunmasi': '/gizlilik-politikasi',
 };
 
 const cityRedirects: Record<string, string> = {
@@ -47,7 +81,7 @@ const cityRedirects: Record<string, string> = {
 };
 
 const neighborhoodRedirects: Record<string, string> = {
-  '/akatlar-pilates': '/p-c/istanbul/akatlar',
+  '/adalar-pilates': '/p-c/istanbul/adalar',
   '/alibeykoy-pilates': '/p-c/istanbul/alibeykoy',
   '/atakoy-pilates': '/p-c/istanbul/atakoy',
   '/bagcilar-pilates': '/p-c/istanbul/bagcilar',
@@ -68,9 +102,7 @@ const neighborhoodRedirects: Record<string, string> = {
   '/kadikoy-pilates': '/p-c/istanbul/kadikoy',
   '/kemerburgaz-pilates': '/p-c/istanbul/kemerburgaz',
   '/kosuyolu-pilates': '/p-c/istanbul/kosuyolu',
-  '/kucukyali-pilates': '/p-c/istanbul/kucukyali',
-  '/kurtkoy-pilates': '/p-c/istanbul/kurtkoy',
-  '/levent-pilates': '/p-c/istanbul/levent',
+  '/kucukcekmece-pilates': '/p-c/istanbul/kucukcekmece',
   '/maltepe-pilates': '/p-c/istanbul/maltepe',
   '/pendik-pilates': '/p-c/istanbul/pendik',
   '/sariyer-pilates': '/p-c/istanbul/sariyer',
@@ -93,56 +125,62 @@ const neighborhoodRedirects: Record<string, string> = {
 };
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  if (pathname !== '/' && pathname.endsWith('/')) {
+  const pathname = request.nextUrl.pathname;
+  const lowPath = pathname.toLowerCase();
+
+  // Trailing slash removal
+  if (pathname.length > 1 && pathname.endsWith('/')) {
     const url = request.nextUrl.clone();
     url.pathname = pathname.slice(0, -1);
     return NextResponse.redirect(url, 301);
   }
-  if (redirectMap[pathname]) {
+
+  if (redirectMap[lowPath]) {
     const url = request.nextUrl.clone();
-    url.pathname = redirectMap[pathname];
+    url.pathname = redirectMap[lowPath];
     return NextResponse.redirect(url, 301);
   }
-  if (cityRedirects[pathname]) {
+
+  if (cityRedirects[lowPath]) {
     const url = request.nextUrl.clone();
-    url.pathname = cityRedirects[pathname];
+    url.pathname = cityRedirects[lowPath];
     return NextResponse.redirect(url, 301);
   }
-  if (neighborhoodRedirects[pathname]) {
+
+  if (neighborhoodRedirects[lowPath]) {
     const url = request.nextUrl.clone();
-    url.pathname = neighborhoodRedirects[pathname];
+    url.pathname = neighborhoodRedirects[lowPath];
     return NextResponse.redirect(url, 301);
   }
-  if (pathname.startsWith('/wp-admin') || pathname.startsWith('/wp-content') || pathname.startsWith('/wp-includes')) {
+
+  if (pathname.startsWith('/wp-admin') || pathname.startsWith('/wp-content') || pathname.startsWith('/wp-includes') || pathname.startsWith('/wp-json')) {
     const url = request.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url, 301);
   }
-  if (pathname.endsWith('.php')) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/';
-    return NextResponse.redirect(url, 301);
-  }
+
   if (pathname.startsWith('/author/')) {
     const url = request.nextUrl.clone();
     url.pathname = '/hakkimizda';
     return NextResponse.redirect(url, 301);
   }
+
   if (pathname.startsWith('/tag/')) {
     const url = request.nextUrl.clone();
     url.pathname = '/blog';
     return NextResponse.redirect(url, 301);
   }
-  const cityMatch = pathname.match(/^\/([a-z-]+)-pilates-salonlari$/);
+
+  var cityMatch = pathname.match(/^\/([a-z-]+)-pilates-salonlari$/);
   if (cityMatch) {
     const url = request.nextUrl.clone();
     url.pathname = '/p-c/' + cityMatch[1];
     return NextResponse.redirect(url, 301);
   }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)'],
 };
