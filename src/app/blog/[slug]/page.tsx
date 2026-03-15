@@ -19,7 +19,7 @@ async function getPost(slug: string) {
   return data;
 }
 
-async function getRelatedPosts(currentSlug: string, focusKeyword: string | null) {
+async function getRelatedPosts(currentSlug: string) {
   const { data } = await supabase
     .from("blog_posts")
     .select("id, title, slug, excerpt, image_url, focus_keyword")
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (!post) return { title: "Yazı Bulunamadı" };
   const imgUrl = post.image_url || DEFAULT_IMG;
   return {
-    title: post.title + " | PilatesTopu",
+    title: post.title,
     description: post.meta_description || post.excerpt,
     keywords: post.focus_keyword ? post.focus_keyword.split(",").map(function(k: string) { return k.trim(); }) : [],
     authors: [{ name: "PilatesTopu" }],
@@ -66,7 +66,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   if (!post) notFound();
   const wordCount = (post.content || "").split(" ").length;
   const readTime = Math.ceil(wordCount / 200);
-  const relatedPosts = await getRelatedPosts(params.slug, post.focus_keyword);
+  const relatedPosts = await getRelatedPosts(params.slug);
   const imgSrc = post.image_url || DEFAULT_IMG;
 
   const jsonLd = {
