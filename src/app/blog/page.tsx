@@ -1,28 +1,5 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
-import { Calendar, ArrowRight } from "lucide-react";
-
-export const revalidate = 60;
-
-export const metadata: Metadata = {
-  title: "Pilates Blog | Rehber & Bilgiler - PilatesTopu",
-  description: "Pilates hakkında her şey: egzersizler, beslenme, reformer pilates, hamile pilatesi ve daha fazlası. Uzman rehber yazıları.",
-  keywords: ["pilates blog", "pilates rehberi", "reformer pilates", "pilates egzersizleri", "pilates beslenme"],
-  alternates: { canonical: "https://pilatestopu-next.vercel.app/blog" },
-  openGraph: {
-    title: "Pilates Blog | Rehber & Bilgiler",
-    description: "Pilates hakkında her şey: egzersizler, beslenme, reformer pilates ve daha fazlası.",
-    url: "https://pilatestopu-next.vercel.app/blog",
-  },
-};
-
-async function getPosts() {
-  const { data } = await supabase
-    .from("blog_posts")
-    .select("title, slug, excerpt, featured_image, created_at")
-    .eq("status", "published")
-import Link from "next/link";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { Calendar, ArrowRight } from "lucide-react";
@@ -33,12 +10,12 @@ const DEFAULT_BLOG_IMAGE = "https://www.pilatestopu.com/wp-content/uploads/2022/
 
 export const metadata: Metadata = {
   title: "Pilates Blog | Rehber & Bilgiler - PilatesTopu",
-  description: "Pilates hakk\u0131nda her \u015fey: egzersizler, beslenme, reformer pilates, hamile pilatesi ve daha fazlas\u0131.",
-  keywords: ["pilates blog", "pilates rehberi", "reformer pilates", "pilates egzersizleri", "pilates beslenme"],
+  description: "Pilates hakkında her şey: egzersizler, beslenme, reformer pilates, hamile pilatesi ve daha fazlası.",
+  keywords: ["pilates blog", "pilates rehberi", "reformer pilates", "pilates egzersizleri"],
   alternates: { canonical: "https://pilatestopu-next.vercel.app/blog" },
   openGraph: {
     title: "Pilates Blog | Rehber & Bilgiler",
-    description: "Pilates hakk\u0131nda her \u015fey: egzersizler, beslenme, reformer pilates ve daha fazlas\u0131.",
+    description: "Pilates hakkında her şey: egzersizler, beslenme, reformer pilates ve daha fazlası.",
     url: "https://pilatestopu-next.vercel.app/blog",
   },
 };
@@ -56,13 +33,13 @@ export default async function BlogPage() {
         <div className="container mx-auto px-4">
           <p className="text-sm text-white/80 mb-2">Ana Sayfa / Blog</p>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Pilates Blog</h1>
-          <p className="text-lg text-white/90">Pilates d\u00fcnyas\u0131ndan yaz\u0131lar, rehberler ve \u00f6neriler</p>
+          <p className="text-lg text-white/90">Pilates dünyasından yazılar, rehberler ve öneriler</p>
         </div>
       </section>
 
       <section className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts?.map(function(post) {
+          {posts?.map(function(post: any) {
             return (
               <Link key={post.id} href={"/blog/" + post.slug} className="group block">
                 <article className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 h-full flex flex-col">
@@ -91,7 +68,7 @@ export default async function BlogPage() {
                         {new Date(post.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" })}
                       </span>
                       <span className="flex items-center gap-1 text-xs text-[#730EC3] font-medium group-hover:gap-2 transition-all">
-                        Devam\u0131 <ArrowRight className="w-3 h-3" />
+                        Devamı <ArrowRight className="w-3 h-3" />
                       </span>
                     </div>
                   </div>
