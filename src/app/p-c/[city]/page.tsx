@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import { MapPin, ChevronRight, Building2, Phone, Navigation } from "lucide-react";
 
 export const revalidate = 3600;
+
+const DEFAULT_IMG = "https://www.pilatestopu.com/wp-content/uploads/2022/06/aletli-pilates.png";
 
 interface CityData {
   id: string;
@@ -37,16 +40,10 @@ async function getNeighborhoods(cityId: string) {
   return data || [];
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ city: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
   const { city } = await params;
   const cityData = await getCity(city);
-  if (!cityData) {
-    return { title: "Bulunamadı | PilatesTopu" };
-  }
+  if (!cityData) return { title: "Bulunamadı | PilatesTopu" };
   return {
     title: cityData.meta_title || cityData.name + " Pilates Salonları | En İyi Stüdyolar",
     description: cityData.meta_description || cityData.description || cityData.name + " pilates salonları",
@@ -54,26 +51,19 @@ export async function generateMetadata({
   };
 }
 
-export default async function CityPage({
-  params,
-}: {
-  params: Promise<{ city: string }>;
-}) {
+export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
   const { city } = await params;
   const cityData = await getCity(city);
   if (!cityData) notFound();
-
   const [places, allCities, neighborhoods] = await Promise.all([
     getPlacesInCity(cityData.id),
     getCities(),
     getNeighborhoods(cityData.id),
   ]);
-
   const otherCities = allCities.filter(function(c) { return c.slug !== city; }).slice(0, 12);
 
   return (
     <>
-      {/* Hero */}
       <section className="bg-gradient-to-br from-purple-700 via-purple-600 to-pink-500 text-white py-16">
         <div className="max-w-7xl mx-auto px-4">
           <nav className="text-sm text-purple-200 mb-4 flex items-center gap-2 flex-wrap">
@@ -102,7 +92,6 @@ export default async function CityPage({
         </div>
       </section>
 
-      {/* Neighborhoods Section */}
       {neighborhoods.length > 0 && (
         <section className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4">
@@ -116,11 +105,7 @@ export default async function CityPage({
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {neighborhoods.map(function(n: any) {
                 return (
-                  <Link
-                    key={n.slug}
-                    href={"/p-c/" + city + "/" + n.slug}
-                    className="flex items-center gap-3 bg-purple-50 hover:bg-purple-100 rounded-xl px-4 py-3 transition-all group"
-                  >
+                  <Link key={n.slug} href={"/p-c/" + city + "/" + n.slug} className="flex items-center gap-3 bg-purple-50 hover:bg-purple-100 rounded-xl px-4 py-3 transition-all group">
                     <MapPin className="w-4 h-4 text-purple-400 group-hover:text-purple-600 flex-shrink-0" />
                     <span className="text-gray-700 group-hover:text-purple-700 font-medium text-sm">{n.name}</span>
                     <ChevronRight className="w-4 h-4 text-gray-300 ml-auto group-hover:text-purple-500" />
@@ -132,7 +117,6 @@ export default async function CityPage({
         </section>
       )}
 
-      {/* Salons */}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-gray-900 mb-8">
           {cityData.name} Pilates Salonları
@@ -141,13 +125,9 @@ export default async function CityPage({
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {places.map(function(place: any) {
               return (
-                <Link
-                  key={place.id}
-                  href={"/salon/" + place.slug}
-                  className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all overflow-hidden group border border-gray-100"
-                >
-                  <div className="bg-gradient-to-r from-purple-600 to-pink-500 h-32 flex items-center justify-center">
-                    <Building2 className="w-12 h-12 text-white/80" />
+                <Link key={place.id} href={"/salon/" + place.slug} className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all overflow-hidden group border border-gray-100">
+                  <div className="relative h-40 w-full">
+                    <Image src={place.image_url || DEFAULT_IMG} alt={place.name} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                   </div>
                   <div className="p-5">
                     <h3 className="font-bold text-lg text-gray-900 group-hover:text-purple-600">{place.name}</h3>
@@ -182,7 +162,6 @@ export default async function CityPage({
         )}
       </section>
 
-      {/* SEO Content */}
       <section className="bg-white py-16">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">{cityData.name} Pilates Rehberi</h2>
@@ -192,7 +171,6 @@ export default async function CityPage({
         </div>
       </section>
 
-      {/* Other Cities */}
       <section className="bg-gray-50 py-16">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Diğer Şehirler</h2>
