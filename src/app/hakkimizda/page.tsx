@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Target, Users, MapPin, Heart } from "lucide-react";
 
-const SITE_URL = "https://pilatestopu-next.vercel.app";
+const SITE_URL = "https://pilatestopu.com";
 
 export const metadata: Metadata = {
   title: "Hakkımızda – Türkiye'nin Pilates Rehberi",
