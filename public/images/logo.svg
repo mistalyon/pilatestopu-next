@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" width="220" height="60">
+  <!-- Pink circle background -->
+  <circle cx="30" cy="30" r="25" fill="#E91E90"/>
+  <!-- Inner circle (pilates ball design) -->
+  <circle cx="30" cy="30" r="15" fill="none" stroke="white" stroke-width="2.5" opacity="0.9"/>
+  <!-- Small inner dot -->
+  <circle cx="23" cy="24" r="5" fill="white" opacity="0.9"/>
+  <!-- PilatesTopu text -->
+  <text x="65" y="38" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="26" font-weight="700" fill="#1a1a2e" letter-spacing="-0.5">PilatesTopu</text>
+</svg>
