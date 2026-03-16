@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabase';
 
-const BASE_URL = 'https://pilatestopu-next.vercel.app';
+const BASE_URL = 'https://pilatestopu.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
