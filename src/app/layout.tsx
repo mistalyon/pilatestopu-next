@@ -19,14 +19,14 @@ export const metadata: Metadata = {
   icons: {
     icon: 'https://pilatestopu.com/wp-content/uploads/2020/12/cropped-Grup-5-3-32x32.png',
   },
-  metadataBase: new URL('https://pilatestopu-next.vercel.app'),
+  metadataBase: new URL('https://pilatestopu.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'tr_TR',
-    url: 'https://pilatestopu-next.vercel.app',
+    url: 'https://pilatestopu.com',
     siteName: 'PilatesTopu',
     title: 'Türkiye\'nin Pilates Rehberi | PilatesTopu',
     description: 'Türkiye\'nin en kapsamlı pilates rehberi. 81 ilde pilates salonları, reformer pilates, mat pilates ve daha fazlası.',
