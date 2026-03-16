@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { HelpCircle, MessageCircle, Mail, ChevronDown } from "lucide-react";
 
-const SITE_URL = "https://pilatestopu-next.vercel.app";
+const SITE_URL = "https://pilatestopu.com";
 
 export const metadata: Metadata = {
   title: "Yardım Merkezi: Sık Sorulan Sorular ve Destek",
