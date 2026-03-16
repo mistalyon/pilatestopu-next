@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const SITE_URL = "https://pilatestopu-next.vercel.app";
+const SITE_URL = "https://pilatestopu.com";
 
 export const metadata: Metadata = {
   title: "Kullanım Koşullları",
