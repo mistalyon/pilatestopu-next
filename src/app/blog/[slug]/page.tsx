@@ -8,7 +8,7 @@ import { Calendar, ArrowLeft, Clock, Tag } from "lucide-react";
 export const revalidate = 3600;
 
 const DEFAULT_IMG = "https://www.pilatestopu.com/wp-content/uploads/2022/06/aletli-pilates.png";
-const SITE_URL = "https://pilatestopu-next.vercel.app";
+const SITE_URL = "https://pilatestopu.com";
 
 async function getPost(slug: string) {
   const { data } = await supabase
