@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/_next/'],
       },
     ],
-    sitemap: 'https://pilatestopu-next.vercel.app/sitemap.xml',
+    sitemap: 'https://pilatestopu.com/sitemap.xml',
   };
 }
