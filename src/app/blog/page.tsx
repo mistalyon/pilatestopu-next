@@ -7,7 +7,7 @@ import { Calendar, ArrowRight } from "lucide-react";
 export const revalidate = 60;
 
 const DEFAULT_BLOG_IMAGE = "https://www.pilatestopu.com/wp-content/uploads/2022/06/aletli-pilates.png";
-const SITE_URL = "https://pilatestopu-next.vercel.app";
+const SITE_URL = "https://pilatestopu.com";
 
 export const metadata: Metadata = {
   title: "Pilates Blog: Egzersizler, Rehberler ve Beslenme Önerileri",
