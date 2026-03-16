@@ -5,7 +5,7 @@ import { MapPin } from "lucide-react";
 
 export const revalidate = 3600;
 
-const SITE_URL = "https://pilatestopu-next.vercel.app";
+const SITE_URL = "https://pilatestopu.com";
 
 export const metadata: Metadata = {
   title: "Türkiye Pilates Salonları | İl İl Pilates Rehberi",
