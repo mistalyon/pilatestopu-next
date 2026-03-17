@@ -40,8 +40,35 @@ export default async function SalonlarPage() {
     .select("id, name, slug, studio_count")
     .order("studio_count", { ascending: false });
 
-  return (
-    <main className="min-h-screen">
+  
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Türkiye Pilates Salonları",
+    description: "Türkiye genelindeki tüm pilates salonları, reformer pilates stüdyoları ve pilates merkezleri",
+    url: SITE_URL + "/p-c",
+    inLanguage: "tr",
+    isPartOf: {
+      "@type": "WebSite",
+      name: "PilatesTopu",
+      url: SITE_URL,
+    },
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Pilates Salonları", item: SITE_URL + "/p-c" },
+      ],
+    },
+  };
+
+return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <main className="min-h-screen">
       <section className="bg-gradient-to-r from-[#730EC3] to-[#E91E90] py-16 text-white text-center">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -105,5 +132,6 @@ export default async function SalonlarPage() {
         })}
       </section>
     </main>
+    </>
   );
 }
