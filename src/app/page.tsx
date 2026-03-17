@@ -11,11 +11,11 @@ const websiteJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'PilatesTopu.com',
-  url: 'https://pilatestopu.com',
+  url: 'https://www.pilatestopu.com',
   description: 'Türkiye\'nin en kapsamlı pilates rehberi. Salonlar, dersler ve ekipmanlar.',
   potentialAction: {
     '@type': 'SearchAction',
-    target: 'https://pilatestopu.com/ara?q={search_term_string}',
+    target: 'https://www.pilatestopu.com/ara?q={search_term_string}',
     'query-input': 'required name=search_term_string',
   },
 };
@@ -24,7 +24,7 @@ const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'PilatesTopu',
-  url: 'https://pilatestopu.com',
+  url: 'https://www.pilatestopu.com',
   logo: '/images/logo.svg',
   contactPoint: {
     '@type': 'ContactPoint',
@@ -51,7 +51,7 @@ const breadcrumbJsonLd = {
       '@type': 'ListItem',
       position: 1,
       name: 'Anasayfa',
-      item: 'https://pilatestopu.com',
+      item: 'https://www.pilatestopu.com',
     },
   ],
 };
