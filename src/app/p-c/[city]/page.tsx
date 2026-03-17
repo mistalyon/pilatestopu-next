@@ -136,35 +136,114 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
     const region = cityRegionMap[city] || "";
 
   /* JSON-LD Structured Data */
-  const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        name: cityData.name + " Pilates Salonları",
-        description: cityData.name + " ilindeki pilates salonları, reformer pilates ve mat pilates stüdyoları rehberi.",
-        url: SITE_URL + "/p-c/" + city,
-        isPartOf: {
-                "@type": "WebSite",
-                name: "PilatesTopu",
-                url: SITE_URL,
+  /* JSON-LD Structured Data - Zengin Schema */
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: cityData.name + " Pilates Salonları",
+      description: cityData.name + " ilindeki pilates salonları, reformer pilates ve mat pilates stüdyoları rehberi.",
+      url: SITE_URL + "/p-c/" + city,
+      isPartOf: {
+        "@type": "WebSite",
+        name: "PilatesTopu",
+        url: SITE_URL,
+      },
+      mainEntity: {
+        "@type": "ItemList",
+        itemListElement: places.slice(0, 10).map(function(place, index) {
+          return {
+            "@type": "ListItem",
+            position: index + 1,
+            item: {
+              "@type": "SportsActivityLocation",
+              name: place.name,
+              url: SITE_URL + "/salon/" + place.slug,
+              address: place.address ? {
+                "@type": "PostalAddress",
+                streetAddress: place.address,
+                addressLocality: cityData.name,
+                addressCountry: "TR",
+              } : undefined,
+              telephone: place.phone || undefined,
+            },
+          };
+        }),
+      },
+      breadcrumb: {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "Pilates Salonları", item: SITE_URL + "/p-c" },
+          { "@type": "ListItem", position: 3, name: cityData.name + " Pilates Salonları" },
+        ],
+      },
+      numberOfItems: places.length,
+      about: {
+        "@type": "City",
+        name: cityData.name,
+        containedInPlace: {
+          "@type": "Country",
+          name: "Türkiye",
         },
-        breadcrumb: {
-                "@type": "BreadcrumbList",
-                itemListElement: [
-                  { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: SITE_URL },
-                  { "@type": "ListItem", position: 2, name: "Pilates Salonları", item: SITE_URL + "/p-c" },
-                  { "@type": "ListItem", position: 3, name: cityData.name + " Pilates Salonları" },
-                        ],
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SportsActivityLocation",
+      "@id": SITE_URL + "/p-c/" + city + "#aggregate",
+      name: cityData.name + " Pilates Salonları",
+      description: cityData.name + " ilindeki " + (cityData.studio_count || 0) + "+ pilates salonu ve reformer pilates stüdyosu.",
+      url: SITE_URL + "/p-c/" + city,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: cityData.name,
+        addressCountry: "TR",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        addressCountry: "TR",
+      },
+      additionalType: "https://schema.org/HealthAndBeautyBusiness",
+      knowsAbout: [
+        "Reformer Pilates",
+        "Mat Pilates",
+        "Klinik Pilates",
+        "Aletli Pilates",
+        "Hamile Pilatesi",
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: cityData.name + " pilates salonları fiyatları ne kadar?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: cityData.name + " ilindeki pilates salonlarında aylık üyelik fiyatları stüdyoya ve pilates türüne göre değişmektedir. Reformer pilates genellikle mat pilatese göre daha yüksek fiyatlıdır. Güncel fiyatlar için salon detay sayfalarını inceleyebilirsiniz.",
+          },
         },
-        numberOfItems: places.length,
-        about: {
-                "@type": "City",
-                name: cityData.name,
-                containedInPlace: {
-                          "@type": "Country",
-                          name: "Türkiye",
-                },
+        {
+          "@type": "Question",
+          name: cityData.name + " en iyi pilates salonu hangisi?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: cityData.name + " ilinde " + (cityData.studio_count || 0) + "+ pilates salonu bulunmaktadır. En iyi salonu seçerken eğitmen deneyimi, salon donanımı, konum ve fiyat gibi kriterleri değerlendirmenizi öneririz. PilatesTopu üzerinden tüm salonları karşılaştırabilirsiniz.",
+          },
         },
-  };
+        {
+          "@type": "Question",
+          name: cityData.name + " reformer pilates yapılan yerler neresi?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: cityData.name + " genelinde birçok stüdyoda reformer pilates dersleri verilmektedir. Reformer pilates, özel aletler kullanılarak yapılan ve kas tonusu, esneklik ile duruş düzeltme konusunda etkili bir pilates türüdür.",
+          },
+        },
+      ],
+    },
+  ];
 
   return (
         <>
