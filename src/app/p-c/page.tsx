@@ -22,6 +22,11 @@ export const metadata: Metadata = {
     locale: "tr_TR",
     siteName: "PilatesTopu",
   },
+    twitter: {
+      card: "summary_large_image",
+      title: "Türkiye Pilates Salonları | İl İl Pilates Rehberi",
+      description: "Türkiye'nin 81 ilinde pilates salonlarını keşfedin. Reformer pilates, mat pilates ve daha fazlası.",
+    },
 };
 
 const regions: Record<string, string[]> = {
