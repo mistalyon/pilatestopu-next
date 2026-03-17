@@ -4,10 +4,14 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 import { MapPin, Phone, Clock, Star, ChevronRight, Building2, Navigation, ArrowLeft } from 'lucide-react'
 
+const SITE_URL = "https://www.pilatestopu.com";
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
+
+export const revalidate = 3600;
 
 interface Props {
   params: { city: string; neighborhood: string }
@@ -40,27 +44,48 @@ async function getNeighborhoodData(citySlug: string, neighborhoodSlug: string) {
 
   return { neighborhood, city, places: places || [], otherNeighborhoods: otherNeighborhoods || [] }
 }
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await getNeighborhoodData(params.city, params.neighborhood)
   if (!data) return { title: 'Bulunamadı' }
 
-  const { neighborhood, city } = data
-  const title = `${neighborhood.name} Pilates Salonları | ${city.name} En İyi Stüdyolar`
-  const description = `${neighborhood.name}, ${city.name} bölgesindeki en iyi pilates salonlarını keşfedin. Reformer pilates, mat pilates, aletli pilates stüdyoları ve fiyatları için hemen inceleyin.`
+  const { neighborhood, city, places } = data
+  const placeCount = places.length
+  const title = `${neighborhood.name} Pilates Salonları ve Reformer Pilates Stüdyoları (2026) | PilatesTopu`
+  const description = `${neighborhood.name}, ${city.name} bölgesindeki ${placeCount > 0 ? placeCount + " " : ""}pilates salonu ve reformer pilates stüdyosunu keşfedin. Mat pilates, aletli pilates, klinik pilates fiyatları ve ücretsiz deneme dersi fırsatları.`
+  const pageUrl = `${SITE_URL}/p-c/${params.city}/${params.neighborhood}`
+
+  const keywords = [
+    `${neighborhood.name} pilates`,
+    `${neighborhood.name} reformer pilates`,
+    `${neighborhood.name} pilates salonu`,
+    `${neighborhood.name} pilates stüdyosu`,
+    `${neighborhood.name} mat pilates`,
+    `${neighborhood.name} aletli pilates`,
+    `${neighborhood.name} klinik pilates`,
+    `${neighborhood.name} pilates fiyatları`,
+    `${city.name} ${neighborhood.name} pilates`,
+    `${neighborhood.name} pilates dersleri`,
+  ]
 
   return {
     title,
     description,
+    keywords,
     openGraph: {
       title,
       description,
-      url: `https://www.pilatestopu.com/p-c/${params.city}/${params.neighborhood}`,
+      url: pageUrl,
       siteName: 'PilatesTopu',
       type: 'website',
+      locale: 'tr_TR',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
     },
     alternates: {
-      canonical: `https://www.pilatestopu.com/p-c/${params.city}/${params.neighborhood}`,
+      canonical: pageUrl,
     },
   }
 }
@@ -81,28 +106,92 @@ export default async function NeighborhoodPage({ params }: Props) {
   if (!data) notFound()
 
   const { neighborhood, city, places, otherNeighborhoods } = data
+  const pageUrl = `${SITE_URL}/p-c/${params.city}/${params.neighborhood}`
+  const cityUrl = `${SITE_URL}/p-c/${city.slug}`
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: `${neighborhood.name} Pilates Salonları`,
-    description: `${neighborhood.name}, ${city.name} bölgesindeki pilates salonları`,
-    url: `https://www.pilatestopu.com/p-c/${params.city}/${params.neighborhood}`,
-    isPartOf: {
-      '@type': 'WebSite',
-      name: 'PilatesTopu',
-      url: 'https://www.pilatestopu.com',
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: `${neighborhood.name} Pilates Salonları (2026)`,
+      description: `${neighborhood.name}, ${city.name} bölgesindeki en iyi pilates salonları ve reformer pilates stüdyoları`,
+      url: pageUrl,
+      inLanguage: 'tr',
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'PilatesTopu',
+        url: SITE_URL,
+      },
+      breadcrumb: {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: 'Pilates Salonları', item: `${SITE_URL}/p-c` },
+          { '@type': 'ListItem', position: 3, name: city.name, item: cityUrl },
+          { '@type': 'ListItem', position: 4, name: neighborhood.name, item: pageUrl },
+        ],
+      },
+      ...(places.length > 0 ? {
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: places.slice(0, 10).map((place: any, index: number) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: place.name,
+            url: `${SITE_URL}/salon/${place.slug}`,
+          })),
+        },
+      } : {}),
     },
-    breadcrumb: {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: 'https://www.pilatestopu.com' },
-        { '@type': 'ListItem', position: 2, name: 'Pilates Salonları', item: 'https://www.pilatestopu.com/p-c' },
-        { '@type': 'ListItem', position: 3, name: `${city.name}`, item: `https://www.pilatestopu.com/p-c/${city.slug}` },
-        { '@type': 'ListItem', position: 4, name: neighborhood.name },
+    ...(places.length > 0 ? [{
+      '@context': 'https://schema.org',
+      '@type': ['SportsActivityLocation', 'HealthAndBeautyBusiness'],
+      name: `${neighborhood.name} Pilates Salonları`,
+      description: `${neighborhood.name} bölgesinde pilates ve reformer pilates hizmeti veren stüdyolar`,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: neighborhood.name,
+        addressRegion: city.name,
+        addressCountry: 'TR',
+      },
+      geo: neighborhood.latitude && neighborhood.longitude ? {
+        '@type': 'GeoCoordinates',
+        latitude: neighborhood.latitude,
+        longitude: neighborhood.longitude,
+      } : undefined,
+      url: pageUrl,
+    }] : []),
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: `${neighborhood.name} bölgesinde kaç pilates salonu var?`,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `${neighborhood.name} bölgesinde PilatesTopu'da kayıtlı ${places.length} adet pilates salonu bulunmaktadır.`,
+          },
+        },
+        {
+          '@type': 'Question',
+          name: `${neighborhood.name} pilates fiyatları ne kadar?`,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `${neighborhood.name} bölgesinde pilates fiyatları salonun türüne ve ders tipine göre değişmektedir. Reformer pilates genellikle seans başına 500-1500 TL, mat pilates ise 300-800 TL arasında değişmektedir.`,
+          },
+        },
+        {
+          '@type': 'Question',
+          name: `${neighborhood.name} bölgesinde reformer pilates yapan yerler nereler?`,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `${neighborhood.name} bölgesindeki reformer pilates stüdyolarını PilatesTopu üzerinden inceleyebilir, fiyatlarını ve hizmetlerini karşılaştırabilirsiniz.`,
+          },
+        },
       ],
     },
-  }
+  ]
 
   const pilatesTypes = [
     { name: 'Reformer Pilates', icon: '🏋️' },
@@ -162,9 +251,8 @@ export default async function NeighborhoodPage({ params }: Props) {
           </div>
 
           <p className="text-lg text-gray-700 max-w-3xl mt-4">
-            {neighborhood.name} bölgesindeki en iyi pilates salonlarını keşfedin. 
-            Reformer pilates, mat pilates ve aletli pilates stüdyolarını karşılaştırın, 
-            size en uygun salonu seçin.
+            {neighborhood.name} bölgesindeki en iyi pilates salonlarını keşfedin.
+            Reformer pilates, mat pilates ve aletli pilates stüdyolarını karşılaştırın, size en uygun salonu seçin.
           </p>
 
           {/* Stats */}
@@ -263,7 +351,7 @@ export default async function NeighborhoodPage({ params }: Props) {
                 {neighborhood.name} bölgesine salon ekleniyor
               </h3>
               <p className="text-gray-500 max-w-md mx-auto">
-                {neighborhood.name} bölgesindeki pilates salonları yakında eklenecektir. 
+                {neighborhood.name} bölgesindeki pilates salonları yakında eklenecektir.
                 Şimdilik {city.name} genelindeki salonları inceleyebilirsiniz.
               </p>
               <Link
@@ -319,20 +407,25 @@ export default async function NeighborhoodPage({ params }: Props) {
           <div className="prose prose-purple max-w-none text-gray-700 space-y-4">
             <p>
               {neighborhood.name}, {city.name} ilinin en popüler bölgelerinden biri olup,
-              bölgede çeşitli pilates stüdyoları bulunmaktadır. Reformer pilates,
-              mat pilates, aletli pilates ve klinik pilates gibi farklı dallarında
-              hizmet veren profesyonel stüdyoları PilatesTopu'’da kolayca bulabilirsiniz.
+              bölgede {places.length > 0 ? `${places.length} adet kayıtlı` : 'çeşitli'} pilates stüdyosu bulunmaktadır.
+              Reformer pilates, mat pilates, aletli pilates ve klinik pilates gibi farklı dallarda
+              hizmet veren profesyonel stüdyoları PilatesTopu&apos;da kolayca bulabilirsiniz.
             </p>
             <p>
-              {neighborhood.name} bölgesindeki pilates salonları, deneyimli eğitmenler
-              eşliğinde kişisel ve grup dersleri sunmaktadır. Pilates, esneklik,
-              core güçlendirme, duruş düzeltme ve rehabilitasyon gibi pek çok alanda
-              fayda sağlamaktadır.
+              {neighborhood.name} bölgesindeki pilates salonları, deneyimli eğitmenler eşliğinde
+              kişisel ve grup dersleri sunmaktadır. Pilates, esneklik, core güçlendirme,
+              duruş düzeltme ve rehabilitasyon gibi pek çok alanda fayda sağlamaktadır.
             </p>
             <p>
               Size en uygun {neighborhood.name} pilates salonunu bulmak için yukarıdaki listeyi
               inceleyebilir, fiyatları ve hizmetleri karşılaştırabilirsiniz.
               Ücretsiz deneme dersi fırsatı sunan salonları değerlendirmenizi öneririz.
+            </p>
+            <p>
+              {neighborhood.name} bölgesinde en çok tercih edilen pilates türleri arasında
+              reformer pilates, mat pilates ve aletli pilates yer almaktadır. Özellikle
+              reformer pilates, son yıllarda artan taleple birlikte {neighborhood.name}
+              bölgesinde de yaygınlaşmaktadır.
             </p>
           </div>
         </div>
@@ -346,7 +439,7 @@ export default async function NeighborhoodPage({ params }: Props) {
           </h2>
           <p className="text-purple-100 text-lg mb-8 max-w-2xl mx-auto">
             {neighborhood.name} bölgesinde pilates salonu işletiyorsanız,
-            PilatesTopu'’da ücretsiz olarak yerinizi alın ve yeni üyeler kazanmaya başlayın.
+            PilatesTopu&apos;da ücretsiz olarak yerinizi alın ve yeni üyeler kazanmaya başlayın.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
