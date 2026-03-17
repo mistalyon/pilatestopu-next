@@ -55,12 +55,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: `https://pilatestopu.com/p-c/${params.city}/${params.neighborhood}`,
+      url: `https://www.pilatestopu.com/p-c/${params.city}/${params.neighborhood}`,
       siteName: 'PilatesTopu',
       type: 'website',
     },
     alternates: {
-      canonical: `https://pilatestopu.com/p-c/${params.city}/${params.neighborhood}`,
+      canonical: `https://www.pilatestopu.com/p-c/${params.city}/${params.neighborhood}`,
     },
   }
 }
@@ -87,18 +87,18 @@ export default async function NeighborhoodPage({ params }: Props) {
     '@type': 'CollectionPage',
     name: `${neighborhood.name} Pilates Salonları`,
     description: `${neighborhood.name}, ${city.name} bölgesindeki pilates salonları`,
-    url: `https://pilatestopu.com/p-c/${params.city}/${params.neighborhood}`,
+    url: `https://www.pilatestopu.com/p-c/${params.city}/${params.neighborhood}`,
     isPartOf: {
       '@type': 'WebSite',
       name: 'PilatesTopu',
-      url: 'https://pilatestopu.com',
+      url: 'https://www.pilatestopu.com',
     },
     breadcrumb: {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: 'https://pilatestopu.com' },
-        { '@type': 'ListItem', position: 2, name: 'Pilates Salonları', item: 'https://pilatestopu.com/p-c' },
-        { '@type': 'ListItem', position: 3, name: `${city.name}`, item: `https://pilatestopu.com/p-c/${city.slug}` },
+        { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: 'https://www.pilatestopu.com' },
+        { '@type': 'ListItem', position: 2, name: 'Pilates Salonları', item: 'https://www.pilatestopu.com/p-c' },
+        { '@type': 'ListItem', position: 3, name: `${city.name}`, item: `https://www.pilatestopu.com/p-c/${city.slug}` },
         { '@type': 'ListItem', position: 4, name: neighborhood.name },
       ],
     },
