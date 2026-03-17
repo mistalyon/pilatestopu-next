@@ -245,14 +245,13 @@ export default async function NeighborhoodPage({ params }: Props) {
               </h1>
               <p className="text-gray-600 mt-1 flex items-center gap-1">
                 <MapPin className="w-4 h-4" />
-                {city.name} / {neighborhood.name}
+                {city.name} / {neighborhood.name} Pilates Stüdyoları ve Fiyatları
               </p>
             </div>
           </div>
 
           <p className="text-lg text-gray-700 max-w-3xl mt-4">
-            {neighborhood.name} bölgesindeki en iyi pilates salonlarını keşfedin.
-            Reformer pilates, mat pilates ve aletli pilates stüdyolarını karşılaştırın, size en uygun salonu seçin.
+            {neighborhood.name} bölgesindeki en iyi pilates salonlarını keşfedin. {neighborhood.name} reformer pilates, mat pilates ve aletli pilates stüdyolarını karşılaştırın, {neighborhood.name} pilates fiyatlarını inceleyin ve size en uygun salonu seçin.
           </p>
 
           {/* Stats */}
@@ -371,7 +370,7 @@ export default async function NeighborhoodPage({ params }: Props) {
         <section className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              {city.name} Diğer İlçe ve Semtler
+              {city.name} Diğer İlçe ve Semtlerdeki Pilates Salonları
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {otherNeighborhoods.map((n: any) => (
@@ -381,7 +380,7 @@ export default async function NeighborhoodPage({ params }: Props) {
                   className="flex items-center gap-2 bg-gray-50 hover:bg-purple-50 rounded-xl px-4 py-3 transition-colors group"
                 >
                   <MapPin className="w-4 h-4 text-gray-400 group-hover:text-purple-600" />
-                  <span className="text-gray-700 group-hover:text-purple-700 font-medium">{n.name}</span>
+                  <span className="text-gray-700 group-hover:text-purple-700 font-medium">{n.name} Pilates</span>
                   <ChevronRight className="w-4 h-4 text-gray-300 ml-auto group-hover:text-purple-500" />
                 </Link>
               ))}
@@ -391,42 +390,85 @@ export default async function NeighborhoodPage({ params }: Props) {
                 href={`/p-c/${city.slug}`}
                 className="text-purple-600 hover:text-purple-800 font-medium"
               >
-                Tüm {city.name} Bölgelerini Gör →
+                Tüm {city.name} Pilates Salonlarını Gör →
               </Link>
             </div>
           </div>
         </section>
       )}
 
-      {/* SEO Content */}
+      {/* SEO Content - Neighborhood Specific */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            {neighborhood.name} Pilates Rehberi
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            {neighborhood.name} Pilates Rehberi - {city.name}
           </h2>
-          <div className="prose prose-purple max-w-none text-gray-700 space-y-4">
+          <div className="prose prose-purple max-w-none text-gray-700 space-y-6">
             <p>
-              {neighborhood.name}, {city.name} ilinin en popüler bölgelerinden biri olup,
-              bölgede {places.length > 0 ? `${places.length} adet kayıtlı` : 'çeşitli'} pilates stüdyosu bulunmaktadır.
-              Reformer pilates, mat pilates, aletli pilates ve klinik pilates gibi farklı dallarda
-              hizmet veren profesyonel stüdyoları PilatesTopu&apos;da kolayca bulabilirsiniz.
+              {neighborhood.name}, {city.name} ilinin en popüler bölgelerinden biri olarak pilates tutkunları için geniş bir stüdyo seçeneği sunmaktadır. {neighborhood.name} pilates salonları, modern ekipmanları ve deneyimli eğitmenleri ile bölge sakinlerine kaliteli pilates deneyimi yaşatmaktadır.
             </p>
+
+            <h3 className="text-xl font-bold text-gray-900 mt-8">
+              {neighborhood.name} Reformer Pilates Stüdyoları
+            </h3>
             <p>
-              {neighborhood.name} bölgesindeki pilates salonları, deneyimli eğitmenler eşliğinde
-              kişisel ve grup dersleri sunmaktadır. Pilates, esneklik, core güçlendirme,
-              duruş düzeltme ve rehabilitasyon gibi pek çok alanda fayda sağlamaktadır.
+              {neighborhood.name} reformer pilates stüdyoları, özellikle son yıllarda büyük ilgi görmektedir. {neighborhood.name} bölgesindeki reformer pilates salonları, kişiye özel programlar ve küçük grup dersleri ile hem yeni başlayanlar hem de ileri seviye katılımcılar için uygun seçenekler sunmaktadır. {neighborhood.name} reformer pilates fiyatları stüdyoya göre değişiklik gösterse de, bölgede her bütçeye uygun seçenekler mevcuttur.
             </p>
+
+            <h3 className="text-xl font-bold text-gray-900 mt-8">
+              {neighborhood.name} Pilates Türleri ve Dersleri
+            </h3>
             <p>
-              Size en uygun {neighborhood.name} pilates salonunu bulmak için yukarıdaki listeyi
-              inceleyebilir, fiyatları ve hizmetleri karşılaştırabilirsiniz.
-              Ücretsiz deneme dersi fırsatı sunan salonları değerlendirmenizi öneririz.
+              {neighborhood.name} bölgesinde mat pilates, aletli pilates, klinik pilates ve hamile pilatesi gibi farklı pilates türlerinde hizmet veren stüdyolar bulunmaktadır. {neighborhood.name} mat pilates dersleri esneklik ve core güçlendirme odaklı çalışmalar sunarken, {neighborhood.name} klinik pilates hizmetleri bel ağrısı, boyun ağrısı ve duruş bozuklukları gibi sorunlara yönelik rehabilitasyon programları içermektedir.
             </p>
+
+            <h3 className="text-xl font-bold text-gray-900 mt-8">
+              {neighborhood.name} Pilates Salonlarının Faydaları
+            </h3>
             <p>
-              {neighborhood.name} bölgesinde en çok tercih edilen pilates türleri arasında
-              reformer pilates, mat pilates ve aletli pilates yer almaktadır. Özellikle
-              reformer pilates, son yıllarda artan taleple birlikte {neighborhood.name}
-              bölgesinde de yaygınlaşmaktadır.
+              {neighborhood.name} pilates stüdyolarında düzenli egzersiz yapmanın pek çok faydası bulunmaktadır. Esneklik artışı, kas tonusu iyileşmesi, duruş düzeltme, stres azaltma ve genel vücut sağlığının korunması bu faydaların başında gelmektedir. {neighborhood.name} bölgesindeki pilates eğitmenleri, kişisel ihtiyaçlarınıza göre program hazırlayarak en verimli sonuçları almanızı sağlamaktadır.
             </p>
+
+            <p className="font-medium">
+              {neighborhood.name} bölgesinde size en uygun pilates salonunu bulmak için yukarıdaki listeyi inceleyebilir, salonların sunduğu hizmetleri ve fiyatları karşılaştırabilirsiniz. Birçok {neighborhood.name} pilates salonu ücretsiz deneme dersi imkanı sunmaktadır.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-12 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            {neighborhood.name} Pilates Hakkında Sık Sorulan Sorular
+          </h2>
+          <div className="space-y-4">
+            {[
+              {
+                q: `${neighborhood.name} pilates fiyatları ne kadar?`,
+                a: `${neighborhood.name} bölgesindeki pilates fiyatları stüdyoya ve pilates türüne göre değişmektedir. Reformer pilates ders ücretleri genellikle mat pilates derslerinden daha yüksektir. Detaylı fiyat bilgisi için yukarıdaki ${neighborhood.name} pilates salonlarının sayfalarını inceleyebilirsiniz.`,
+              },
+              {
+                q: `${neighborhood.name} yakınlarında reformer pilates yapabileceğim yer var mı?`,
+                a: `Evet, ${neighborhood.name} bölgesinde reformer pilates hizmeti sunan birçok stüdyo bulunmaktadır. PilatesTopu üzerinden ${neighborhood.name} reformer pilates salonlarını görüntüleyebilir ve size en yakın stüdyoyu bulabilirsiniz.`,
+              },
+              {
+                q: `${neighborhood.name} pilates salonlarında deneme dersi var mı?`,
+                a: `${neighborhood.name} bölgesindeki birçok pilates salonu yeni üyeler için ücretsiz veya indirimli deneme dersi fırsatı sunmaktadır. Detaylı bilgi için ilgilendiğiniz salonun sayfasını ziyaret edebilirsiniz.`,
+              },
+              {
+                q: `${neighborhood.name} bölgesinde hamile pilatesi yapılıyor mu?`,
+                a: `${neighborhood.name} bölgesinde hamile pilatesi hizmeti sunan stüdyolar mevcuttur. Hamile pilatesi, gebelik döneminde güvenli egzersiz yapmanızı sağlayan özel bir programdır. Uzman eğitmenler eşliğinde ${neighborhood.name} hamile pilates derslerine katılabilirsiniz.`,
+              },
+            ].map((faq, i) => (
+              <details key={i} className="bg-gray-50 rounded-xl p-5 group">
+                <summary className="font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                  {faq.q}
+                  <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
+                </summary>
+                <p className="text-gray-700 mt-3">{faq.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
