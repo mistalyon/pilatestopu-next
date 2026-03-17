@@ -5,7 +5,7 @@ import { MapPin } from "lucide-react";
 
 export const revalidate = 3600;
 
-const SITE_URL = "https://pilatestopu.com";
+const SITE_URL = "https://www.pilatestopu.com";
 
 export const metadata: Metadata = {
   title: "Türkiye Pilates Salonları | İl İl Pilates Rehberi",
@@ -19,6 +19,7 @@ export const metadata: Metadata = {
       "Türkiye'nin 81 ilinde pilates salonlarını keşfedin. Reformer pilates, mat pilates ve daha fazlası.",
     url: SITE_URL + "/p-c",
     type: "website",
+    locale: "tr_TR",
     siteName: "PilatesTopu",
   },
 };
