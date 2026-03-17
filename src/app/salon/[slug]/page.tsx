@@ -43,12 +43,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: place.meta_title || `${place.name} - ${cityName} Pilates Salonu`,
     description: place.meta_description || `${place.name}, ${cityName} bölgesinde hizmet veren pilates salonu. Adres, telefon ve değerlendirme bilgileri.`,
-    alternates: { canonical: `https://pilatestopu-next.vercel.app/salon/${slug}` },
+    alternates: { canonical: `https://www.pilatestopu.com/salon/${slug}` },
     openGraph: {
       title: place.meta_title || `${place.name} - ${cityName} Pilates`,
       description: place.meta_description || place.description,
       type: "website",
-      url: `https://pilatestopu-next.vercel.app/salon/${slug}`,
+      url: `https://www.pilatestopu.com/salon/${slug}`,
       images: place.featured_image ? [place.featured_image] : undefined,
     },
   };
@@ -75,7 +75,7 @@ export default async function SalonDetailPage({ params }: Props) {
       addressCountry: "TR",
     },
     telephone: place.phone || undefined,
-    url: place.website || `https://pilatestopu-next.vercel.app/salon/${slug}`,
+    url: place.website || `https://www.pilatestopu.com/salon/${slug}`,
     image: place.featured_image || undefined,
     aggregateRating: place.rating ? {
       "@type": "AggregateRating",
@@ -89,9 +89,9 @@ export default async function SalonDetailPage({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: "https://pilatestopu-next.vercel.app" },
-      { "@type": "ListItem", position: 2, name: "Salonlar", item: "https://pilatestopu-next.vercel.app/p-c" },
-      { "@type": "ListItem", position: 3, name: `${cityName} Pilates`, item: `https://pilatestopu-next.vercel.app/p-c/${citySlug}` },
+      { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: "https://www.pilatestopu.com" },
+      { "@type": "ListItem", position: 2, name: "Salonlar", item: "https://www.pilatestopu.com/p-c" },
+      { "@type": "ListItem", position: 3, name: `${cityName} Pilates`, item: `https://www.pilatestopu.com/p-c/${citySlug}` },
       { "@type": "ListItem", position: 4, name: place.name },
     ],
   };
