@@ -46,6 +46,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       siteName: "PilatesTopu",
       images: [{ url: imgUrl, width: 1024, height: 680, alt: post.title }],
       type: "article",
+      locale: "tr_TR",
       publishedTime: post.created_at,
       modifiedTime: post.updated_at || post.created_at,
     },
