@@ -8,7 +8,7 @@ import { Calendar, ArrowLeft, Clock, Tag } from "lucide-react";
 export const revalidate = 3600;
 
 const DEFAULT_IMG = "/images/default-blog.svg";
-const SITE_URL = "https://pilatestopu.com";
+const SITE_URL = "https://www.pilatestopu.com";
 
 async function getPost(slug: string) {
   const { data } = await supabase
