@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!place) return { title: "Salon Bulunamadı" };
 
   const cityName = place.cities?.name || "";
-  const title = place.meta_title || `${place.name} - ${cityName} Pilates Salonu | PilatesTopu`;
+  const title = place.meta_title || `${place.name} - ${cityName} Pilates Salonu`;
   const description = place.meta_description || `${place.name}, ${cityName} bölgesinde hizmet veren pilates salonu. Adres, telefon, fiyatlar ve değerlendirme bilgileri.`;
   const pageUrl = `${SITE_URL}/salon/${slug}`;
   const placeTypes = await getPlaceTypes(place.id);
