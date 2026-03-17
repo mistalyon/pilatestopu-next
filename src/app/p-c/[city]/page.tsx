@@ -7,7 +7,7 @@ import { MapPin, ChevronRight, Building2, Phone, Navigation } from "lucide-react
 
 export const revalidate = 3600;
 
-const SITE_URL = "https://pilatestopu.com";
+const SITE_URL = "https://www.pilatestopu.com";
 const DEFAULT_IMG = "/images/default-blog.svg";
 
 interface CityData {
