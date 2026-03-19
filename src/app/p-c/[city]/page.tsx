@@ -18,6 +18,7 @@ interface CityData {
     meta_title: string | null;
     meta_description: string | null;
     studio_count: number;
+    content: string | null;
 }
 
 /* ── Bölge haritası (SEO metinleri için) ── */
@@ -358,30 +359,30 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                       )}
               </section>
         
-          {/* SEO İçerik Bölümü */}
-              <section className="bg-white py-16">
-                      <div className="max-w-4xl mx-auto px-4">
-                                <h2 className="text-2xl font-bold text-gray-900 mb-6">{cityData.name} Pilates Rehberi</h2>
-                                <div className="prose prose-purple max-w-none text-gray-700 space-y-4">
-                                            <p>
-                                              {cityData.name}, {region ? region + " Bölgesi'nin önemli şehirlerinden biri olarak" : "Türkiye'nin gelişen illerinden biri olarak"} pilates alanında
-                                                          giderek büyüyen bir stüdyo ağına sahiptir. Şehirde {cityData.studio_count}+ pilates salonu ile reformer pilates, mat pilates, klinik pilates
-                                                          ve aletli pilates gibi farklı branşlarda profesyonel eğitim imkânı sunulmaktadır.
-                                            </p>
-                                            <p>
-                                              {cityData.name} pilates salonları, sertifikalı eğitmenler eşliğinde birebir özel dersler ve grup seansları düzenlemektedir.
-                                                          İster duruş bozukluğunu düzeltmek, ister core kaslarını güçlendirmek, ister doğum sonrası toparlanma ya da
-                                                          rehabilitasyon amaçlı olsun, {cityData.name} ilindeki stüdyolar her seviyeye uygun programlar sunmaktadır.
-                                            </p>
-                                            <p>
-                                                          PilatesTopu olarak {cityData.name} ilindeki en iyi pilates salonlarını, fiyat bilgilerini ve kullanıcı değerlendirmelerini
-                                                          bir araya getiriyoruz. Size en uygun {cityData.name} pilates salonunu bulmak için yukarıdaki listeyi inceleyebilir,
-                                                          stüdyoları karşılaştırabilirsiniz.
-                                              {neighborhoods.length > 0 ? " " + cityData.name + " ilçelerindeki salonları görmek için yukarıdaki ilçe bağlantılarını kullanabilirsiniz." : ""}
-                                            </p>
-                                </div>
-                      </div>
-              </section>
+            {/* SEO İçerik Bölümü */}
+            <section className="bg-white py-16">
+                <div className="max-w-4xl mx-auto px-4">
+                    {cityData.content ? (
+                        <div className="prose prose-purple prose-lg max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: cityData.content }} />
+                    ) : (
+                        <>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6">{cityData.name} Pilates Rehberi</h2>
+                            <div className="prose prose-purple max-w-none text-gray-700 space-y-4">
+                                <p>
+                                    {cityData.name}, {region ? region + " Bölgesi'nin önemli şehirlerinden biri olarak" : "Türkiye'nin gelişen illerinden biri olarak"} pilates alanında giderek büyüyen bir stüdyo ağına sahiptir. Şehirde {cityData.studio_count}+ pilates salonu ile reformer pilates, mat pilates, klinik pilates ve aletli pilates gibi farklı branşlarda profesyonel eğitim imkânı sunulmaktadır.
+                                </p>
+                                <p>
+                                    {cityData.name} pilates salonları, sertifikalı eğitmenler eşliğinde birebir özel dersler ve grup seansları düzenlemektedir. İster duruş bozukluğunu düzeltmek, ister core kaslarını güçlendirmek, ister doğum sonrası toparlanma ya da rehabilitasyon amaçlı olsun, {cityData.name} ilindeki stüdyolar her seviyeye uygun programlar sunmaktadır.
+                                </p>
+                                <p>
+                                    PilatesTopu olarak {cityData.name} ilindeki en iyi pilates salonlarını, fiyat bilgilerini ve kullanıcı değerlendirmelerini bir araya getiriyoruz. Size en uygun {cityData.name} pilates salonunu bulmak için yukarıdaki listeyi inceleyebilir, stüdyoları karşılaştırabilirsiniz.
+                                    {neighborhoods.length > 0 ? " " + cityData.name + " ilçelerindeki salonları görmek için yukarıdaki ilçe bağlantılarını kullanabilirsiniz." : ""}
+                                </p>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </section>
         
           {/* Diğer Şehirler */}
               <section className="bg-gray-50 py-16">
