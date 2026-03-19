@@ -51,8 +51,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { neighborhood, city, places } = data
   const placeCount = places.length
-  const title = `${neighborhood.name} Pilates Salonları ve Reformer Pilates Stüdyoları (2026)`
-  const description = `${neighborhood.name}, ${city.name} bölgesindeki ${placeCount > 0 ? placeCount + " " : ""}pilates salonu ve reformer pilates stüdyosunu keşfedin. Mat pilates, aletli pilates, klinik pilates fiyatları ve ücretsiz deneme dersi fırsatları.`
+  const title = neighborhood.meta_title || `${neighborhood.name} Pilates Salonları ve Reformer Pilates Stüdyoları (2026)`
+  const description = neighborhood.meta_description || `${neighborhood.name}, ${city.name} bölgesindeki ${placeCount > 0 ? placeCount + " " : ""}pilates salonu ve reformer pilates stüdyosunu keşfedin. Mat pilates, aletli pilates, klinik pilates fiyatları ve ücretsiz deneme dersi fırsatları.`
   const pageUrl = `${SITE_URL}/p-c/${params.city}/${params.neighborhood}`
 
   const keywords = [
