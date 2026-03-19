@@ -30,8 +30,8 @@ export default function WhatsAppButton() {
         href="https://wa.me/905446732202"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="WhatsApp ile iletisim"
-        title="WhatsApp ile iletisim"
+        aria-label="WhatsApp ile iletişim"
+        title="WhatsApp ile iletişim"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{
@@ -85,7 +85,7 @@ export default function WhatsAppButton() {
               letterSpacing: '0.3px',
             }}
           >
-            <span>Bize Yazin</span>
+            <span>Bize Yazın</span>
             <span
               style={{
                 display: 'flex',
