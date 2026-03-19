@@ -4,6 +4,7 @@ import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import { MapPin, ChevronRight, Building2, Phone, Navigation } from "lucide-react";
+import EmptyStudioForm from "@/components/EmptyStudioForm";
 
 export const revalidate = 3600;
 
@@ -349,13 +350,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                     })}
                     </div>
                   ) : (
-                    <div className="bg-gray-50 rounded-2xl p-12 text-center">
-                                <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                                <h3 className="text-xl font-bold text-gray-700 mb-2">Salonlar Yakında Eklenecek</h3>
-                                <p className="text-gray-500 max-w-md mx-auto">
-                                  {cityData.name} bölgesindeki pilates salonları yakında eklenecektir.
-                                </p>
-                    </div>
+                    <EmptyStudioForm locationName={cityData.name} />
                       )}
               </section>
         
