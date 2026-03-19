@@ -1,24 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-
 export default function WhatsAppButton() {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <>
       <style jsx global>{`
-        @keyframes wa-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
-          50% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
-        }
         @keyframes wa-live-dot {
           0%, 100% { opacity: 1; transform: scale(1); }
           50% { opacity: 0.4; transform: scale(0.7); }
-        }
-        @keyframes wa-slide-in {
-          from { opacity: 0; transform: translateX(20px); }
-          to { opacity: 1; transform: translateX(0); }
         }
         @keyframes wa-glow {
           0%, 100% { box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3), 0 0 0 0 rgba(37, 211, 102, 0.4); }
@@ -32,8 +20,6 @@ export default function WhatsAppButton() {
         rel="noopener noreferrer"
         aria-label="WhatsApp ile iletişim"
         title="WhatsApp ile iletişim"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
         style={{
           position: 'fixed',
           bottom: '24px',
@@ -45,17 +31,16 @@ export default function WhatsAppButton() {
           background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
           color: 'white',
           borderRadius: '50px',
-          padding: isHovered ? '12px 22px 12px 16px' : '14px',
+          padding: '12px 22px 12px 16px',
           textDecoration: 'none',
           cursor: 'pointer',
-          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
           animation: 'wa-glow 2.5s ease-in-out infinite',
           border: 'none',
           outline: 'none',
-          overflow: 'hidden',
-          whiteSpace: 'nowrap' as React.CSSProperties['whiteSpace'],
-          transform: isHovered ? 'scale(1.05)' : 'scale(1)',
         }}
+        onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
       >
         {/* WhatsApp Icon */}
         <svg
@@ -73,47 +58,45 @@ export default function WhatsAppButton() {
         </svg>
 
         {/* Text + Live indicator */}
-        {isHovered && (
+        <span
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '14px',
+            fontWeight: 600,
+            letterSpacing: '0.3px',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <span>Bize Yazın</span>
           <span
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
-              animation: 'wa-slide-in 0.3s ease-out forwards',
-              fontSize: '14px',
-              fontWeight: 600,
-              letterSpacing: '0.3px',
+              gap: '4px',
+              background: 'rgba(255,255,255,0.2)',
+              borderRadius: '20px',
+              padding: '2px 8px 2px 6px',
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
             }}
           >
-            <span>Bize Yazın</span>
             <span
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                background: 'rgba(255,255,255,0.2)',
-                borderRadius: '20px',
-                padding: '2px 8px 2px 6px',
-                fontSize: '11px',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-                textTransform: 'uppercase' as React.CSSProperties['textTransform'],
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor: '#ff4444',
+                animation: 'wa-live-dot 1.2s ease-in-out infinite',
+                display: 'inline-block',
               }}
-            >
-              <span
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  backgroundColor: '#ff4444',
-                  animation: 'wa-live-dot 1.2s ease-in-out infinite',
-                  display: 'inline-block',
-                }}
-              />
-              LIVE
-            </span>
+            />
+            LIVE
           </span>
-        )}
+        </span>
       </a>
     </>
   );
