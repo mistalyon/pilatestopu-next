@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Metadata } from 'next'
 import { MapPin, Phone, Clock, Star, ChevronRight, Building2, Navigation, ArrowLeft } from 'lucide-react'
+import EmptyStudioForm from '@/components/EmptyStudioForm'
 
 const SITE_URL = "https://www.pilatestopu.com";
 
@@ -346,23 +347,7 @@ export default async function NeighborhoodPage({ params }: Props) {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-2xl p-12 text-center">
-              <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-700 mb-2">
-                {neighborhood.name} bölgesine salon ekleniyor
-              </h3>
-              <p className="text-gray-500 max-w-md mx-auto">
-                {neighborhood.name} bölgesindeki pilates salonları yakında eklenecektir.
-                Şimdilik {city.name} genelindeki salonları inceleyebilirsiniz.
-              </p>
-              <Link
-                href={`/p-c/${city.slug}`}
-                className="inline-flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-xl mt-6 hover:bg-purple-700 transition-colors"
-              >
-                <MapPin className="w-4 h-4" />
-                {city.name} Salonlarını İncele
-              </Link>
-            </div>
+            <EmptyStudioForm locationName={neighborhood.name} />
           )}
         </div>
       </section>
