@@ -402,33 +402,23 @@ export default async function NeighborhoodPage({ params }: Props) {
       {/* SEO Content */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            {neighborhood.name} Pilates Rehberi
-          </h2>
-          <div className="prose prose-purple max-w-none text-gray-700 space-y-4">
-            <p>
-              {neighborhood.name}, {city.name} ilinin en popüler bölgelerinden biri olup,
-              bölgede {places.length > 0 ? `${places.length} adet kayıtlı` : 'çeşitli'} pilates stüdyosu bulunmaktadır.
-              Reformer pilates, mat pilates, aletli pilates ve klinik pilates gibi farklı dallarda
-              hizmet veren profesyonel stüdyoları PilatesTopu&apos;da kolayca bulabilirsiniz.
-            </p>
-            <p>
-              {neighborhood.name} bölgesindeki pilates salonları, deneyimli eğitmenler eşliğinde
-              kişisel ve grup dersleri sunmaktadır. Pilates, esneklik, core güçlendirme,
-              duruş düzeltme ve rehabilitasyon gibi pek çok alanda fayda sağlamaktadır.
-            </p>
-            <p>
-              Size en uygun {neighborhood.name} pilates salonunu bulmak için yukarıdaki listeyi
-              inceleyebilir, fiyatları ve hizmetleri karşılaştırabilirsiniz.
-              Ücretsiz deneme dersi fırsatı sunan salonları değerlendirmenizi öneririz.
-            </p>
-            <p>
-              {neighborhood.name} bölgesinde en çok tercih edilen pilates türleri arasında
-              reformer pilates, mat pilates ve aletli pilates yer almaktadır. Özellikle
-              reformer pilates, son yıllarda artan taleple birlikte {neighborhood.name}
-              bölgesinde de yaygınlaşmaktadır.
-            </p>
-          </div>
+          {neighborhood.content ? (
+            <div className="prose prose-purple prose-lg max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: neighborhood.content }} />
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                {neighborhood.name} Pilates Rehberi
+              </h2>
+              <div className="prose prose-purple max-w-none text-gray-700 space-y-4">
+                <p>
+                  {neighborhood.name}, {city.name} ilinin popüler bölgelerinden biri olup pilates stüdyoları bulunmaktadır.
+                </p>
+                <p>
+                  {neighborhood.name} bölgesindeki pilates salonları, deneyimli eğitmenler eşliğinde kişisel ve grup dersleri sunmaktadır.
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
